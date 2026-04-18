@@ -148,6 +148,12 @@ PM-KISAN, PM Awas Yojana (PMAY), MGNREGA, PM Ujjwala Yojana, Ayushman Bharat (PM
 
 ---
 
+## 🤖 AI Tools Used
+
+This project was built using **Google Gemini (Antigravity)**, an agentic AI coding assistant by Google DeepMind. A complete log of all prompts and AI interactions across 4 development sessions is available in [`AI_CONVERSATION_LOG.md`](AI_CONVERSATION_LOG.md).
+
+---
+
 ## 📄 License
 
 This project was built for the CBC Recruitment Missions assessment.
