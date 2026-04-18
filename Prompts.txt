@@ -1,0 +1,308 @@
+Look into MISSION 03.docx and analyze it. Understand the task and all its requirements. I will provide you with the 15+ schemes.
+You are designing a backend AI system called “KALAM” that matches Indian citizens to government welfare schemes.
+
+This is NOT a summarization task. This is a LOGIC ENGINE design task.
+
+Your goal is to build a rule-based eligibility and matching engine that is:
+1. Explicit (no vague language)
+2. Explainable (every output must trace back to rules)
+3. Uncertainty-aware (must NOT assume missing data)
+4. Resistant to hallucination
+
+-----------------------------------
+STEP 1: INPUT SCHEMA
+-----------------------------------
+Define a structured input schema for a user with the following fields:
+- Age
+- Gender
+- State
+- Rural/Urban
+- Annual Income
+- Occupation
+- Land Ownership (in hectares)
+- Land Leasing Status
+- Caste Category
+- Family Size
+- Aadhaar Status (Yes/No)
+- Bank Account Status (Yes/No)
+- Marital Status
+
+Do NOT add unnecessary fields.
+
+-----------------------------------
+STEP 2: RULE REPRESENTATION
+-----------------------------------
+For each scheme, express eligibility ONLY in strict IF-THEN logic.
+
+Example format:
+IF [conditions]
+THEN eligible_for_[scheme] = TRUE
+
+Rules must:
+- Avoid natural language summaries
+- Avoid assumptions
+- Mark ambiguity explicitly using:
+  ambiguity_flag = TRUE
+
+-----------------------------------
+STEP 3: MATCHING ENGINE LOGIC
+-----------------------------------
+Design the core algorithm that:
+1. Takes user input
+2. Evaluates all scheme rules
+3. Outputs:
+   - Fully eligible schemes
+   - Conditionally eligible schemes (with missing requirements)
+   - Not eligible schemes
+
+Each output must include:
+- Rule trace (which rules passed/failed)
+- Confidence score (HIGH / MEDIUM / LOW)
+- Reason for confidence level
+
+-----------------------------------
+STEP 4: AMBIGUITY HANDLING
+-----------------------------------
+Your system MUST detect and handle ambiguity.
+
+For each scheme evaluation:
+- If any rule is unclear, conflicting, or incomplete:
+  → Do NOT assume
+  → Mark:
+     ambiguity_flag = TRUE
+
+Also:
+- List ALL possible interpretations
+- Reduce confidence score accordingly
+
+-----------------------------------
+STEP 5: DEPENDENCY HANDLING
+-----------------------------------
+Some schemes require prerequisites (e.g., bank account, Aadhaar).
+
+Implement logic such that:
+IF prerequisite_missing == TRUE
+THEN:
+  - Mark scheme as "conditionally eligible"
+  - Output required steps to become eligible
+
+-----------------------------------
+STEP 6: EDGE CASE RESILIENCE
+-----------------------------------
+Your system must handle:
+- Missing inputs
+- Contradictory inputs
+- Boundary values (exact cutoffs)
+
+Define how the engine behaves in each case.
+
+-----------------------------------
+STEP 7: OUTPUT FORMAT
+-----------------------------------
+Return output in structured JSON format:
+
+{
+  "eligible_schemes": [],
+  "conditional_schemes": [
+    {
+      "scheme": "",
+      "missing_requirements": [],
+      "confidence": "",
+      "explanation": ""
+    }
+  ],
+  "not_eligible_schemes": [],
+  "ambiguities_detected": []
+}
+
+-----------------------------------
+IMPORTANT CONSTRAINTS
+-----------------------------------
+- Do NOT hallucinate scheme rules
+- If scheme data is missing or unclear → explicitly say so
+- Prefer “uncertain” over “wrong but confident”
+- Do NOT generalize beyond given rules
+
+-----------------------------------
+FINAL TASK
+-----------------------------------
+Design the system step-by-step and provide:
+1. Input schema
+2. Sample rule definitions for at least 3 schemes
+3. Matching algorithm (pseudo-code)
+4. Example output for one user
+
+Look into MISSION 03.docx and analyze it. Understand the task and all its requirements. I will provide you with the 15+ schemes.
+You are designing a backend AI system called “KALAM” that matches Indian citizens to government welfare schemes.
+
+This is NOT a summarization task. This is a LOGIC ENGINE design task.
+
+Your goal is to build a rule-based eligibility and matching engine that is:
+1. Explicit (no vague language)
+2. Explainable (every output must trace back to rules)
+3. Uncertainty-aware (must NOT assume missing data)
+4. Resistant to hallucination
+
+-----------------------------------
+STEP 1: INPUT SCHEMA
+-----------------------------------
+Define a structured input schema for a user with the following fields:
+- Age
+- Gender
+- State
+- Rural/Urban
+- Annual Income
+- Occupation
+- Land Ownership (in hectares)
+- Land Leasing Status
+- Caste Category
+- Family Size
+- Aadhaar Status (Yes/No)
+- Bank Account Status (Yes/No)
+- Marital Status
+
+Do NOT add unnecessary fields.
+
+-----------------------------------
+STEP 2: RULE REPRESENTATION
+-----------------------------------
+For each scheme, express eligibility ONLY in strict IF-THEN logic.
+
+Example format:
+IF [conditions]
+THEN eligible_for_[scheme] = TRUE
+
+Rules must:
+- Avoid natural language summaries
+- Avoid assumptions
+- Mark ambiguity explicitly using:
+  ambiguity_flag = TRUE
+
+-----------------------------------
+STEP 3: MATCHING ENGINE LOGIC
+-----------------------------------
+Design the core algorithm that:
+1. Takes user input
+2. Evaluates all scheme rules
+3. Outputs:
+   - Fully eligible schemes
+   - Conditionally eligible schemes (with missing requirements)
+   - Not eligible schemes
+
+Each output must include:
+- Rule trace (which rules passed/failed)
+- Confidence score (HIGH / MEDIUM / LOW)
+- Reason for confidence level
+
+-----------------------------------
+STEP 4: AMBIGUITY HANDLING
+-----------------------------------
+Your system MUST detect and handle ambiguity.
+
+For each scheme evaluation:
+- If any rule is unclear, conflicting, or incomplete:
+  → Do NOT assume
+  → Mark:
+     ambiguity_flag = TRUE
+
+Also:
+- List ALL possible interpretations
+- Reduce confidence score accordingly
+
+-----------------------------------
+STEP 5: DEPENDENCY HANDLING
+-----------------------------------
+Some schemes require prerequisites (e.g., bank account, Aadhaar).
+
+Implement logic such that:
+IF prerequisite_missing == TRUE
+THEN:
+  - Mark scheme as "conditionally eligible"
+  - Output required steps to become eligible
+
+-----------------------------------
+STEP 6: EDGE CASE RESILIENCE
+-----------------------------------
+Your system must handle:
+- Missing inputs
+- Contradictory inputs
+- Boundary values (exact cutoffs)
+
+Define how the engine behaves in each case.
+
+-----------------------------------
+STEP 7: OUTPUT FORMAT
+-----------------------------------
+Return output in structured JSON format:
+
+{
+  "eligible_schemes": [],
+  "conditional_schemes": [
+    {
+      "scheme": "",
+      "missing_requirements": [],
+      "confidence": "",
+      "explanation": ""
+    }
+  ],
+  "not_eligible_schemes": [],
+  "ambiguities_detected": []
+}
+
+-----------------------------------
+IMPORTANT CONSTRAINTS
+-----------------------------------
+- Do NOT hallucinate scheme rules
+- If scheme data is missing or unclear → explicitly say so
+- Prefer “uncertain” over “wrong but confident”
+- Do NOT generalize beyond given rules
+
+-----------------------------------
+FINAL TASK
+-----------------------------------
+Design the system step-by-step and provide:
+1. Input schema
+2. Sample rule definitions for at least 3 schemes
+3. Matching algorithm (pseudo-code)
+4. Example output for one user
+
+
+"When a user uses that chat option, instead of showing all the results in the chatbox itself, I want you to present it in the same format as the form mode. " Has this been implemented?
+
+Main 25 saal ka hu aur koi job nhi krta. Sc category se belong krta hu aur Gujarat me rehta hu. No land.
+✅ Samajh gaye: Umar: 25 saal, State: IN-GJ.
+Aap male hain ya female? (ladka / ladki / aur)
+Male
+✅ Samajh gaye: Umar: 25 saal, Gender: Male, State: IN-GJ.
+Aap gaon mein rehte hain ya sheher mein?
+Village
+✅ Samajh gaye: Umar: 25 saal, Gender: Male, State: IN-GJ, Area: Gaon (Rural).
+Aapki saalana income approx kitni hai? (rupees mein batayein)
+50,000
+✅ Samajh gaye: Umar: 25 saal, Gender: Male, State: IN-GJ, Area: Gaon (Rural).
+Aapki saalana income approx kitni hai? (rupees mein batayein)
+50000
+✅ Samajh gaye: Umar: 25 saal, Gender: Male, State: IN-GJ, Area: Gaon (Rural), Income: ~Rs.50,000 saalana.
+⚠ Inferred annual_income=50000 from bare number — verify with user
+Aap kya kaam karte hain? (kisan / mazdoor / sarkari naukri / business / etc.)
+
+I was testing the engine and even though I mentioned that I dont have a job by saying "koi job nhi krta", it still asks me my job. Also I think it failed to capture my caste when i said "Sc category se belong krta hu". Fix these issues.
+
+Check every box. Incomplete submissions get disqualified. No exceptions.
+
+□  Structured eligibility rules for 15+ central government schemes
+□  Ambiguity map documenting contradictions and overlaps across schemes
+□  Working matching engine with explainable confidence scores
+□  Ten adversarial edge-case profiles with documented results
+□  Conversational interface supporting Hinglish natural language input
+□  Architecture document with system diagram and technical decisions
+These are the checkboxes of the task. Make sure as many times as you can that they have been met with. These are critical. Missing on even 1 results in disqualification and winning for me is a must. There is no other option.
+
+
+1. CSS Variable Updates & Aesthethics
+Backgrounds: Soft warm whites and cream/beige tones (#FDFBF7, #FFFFFF) instead of pitch black/dark blue.
+Accents: Soft terracotta/orange gradients (#D96A36, #E0875C) that feel earthy and warm instead of harsh neon blue.
+Text: Deep brown/charcoal (#2E2925) for extremely clear readability, replacing white text on dark background.
+Font: Add the Outfit font for a modern but friendly structure, alongside Inter and Noto Sans Devanagari for excellent readability in English, Hinglish, and Hindi.(Dont change font of kalam on landing page. leave it as it is)
+2. Landing Page
+The landing page text will also adapt based on language (en, hinglish, hi). For this add the language option on the landing page itself. The tagline+get started should change on the basis of language selected.
