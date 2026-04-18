@@ -1,136 +1,10 @@
-Look into MISSION 03.docx and analyze it. Understand the task and all its requirements. I will provide you with the 15+ schemes.
-You are designing a backend AI system called “KALAM” that matches Indian citizens to government welfare schemes.
+first can you give me a list of 15+ central government schemes(indian) that are the most beneficial for the common person.
 
-This is NOT a summarization task. This is a LOGIC ENGINE design task.
+You had given me a list of 15 most important central government schemes. Now I want you to give me detailed eligibility criteria for each of them. Make sure to cover every aspect. And the data should be up to date as of 14-04-2026. This data has to be passed to claude to train it so keep it structured and easy for it to be trained on. Dont hallucinate.(I am repeating: Cover every eligibility criteria. Missing on even one can be disastrous.)
 
-Your goal is to build a rule-based eligibility and matching engine that is:
-1. Explicit (no vague language)
-2. Explainable (every output must trace back to rules)
-3. Uncertainty-aware (must NOT assume missing data)
-4. Resistant to hallucination
+Help me design adversarial test cases that impress evaluators
 
------------------------------------
-STEP 1: INPUT SCHEMA
------------------------------------
-Define a structured input schema for a user with the following fields:
-- Age
-- Gender
-- State
-- Rural/Urban
-- Annual Income
-- Occupation
-- Land Ownership (in hectares)
-- Land Leasing Status
-- Caste Category
-- Family Size
-- Aadhaar Status (Yes/No)
-- Bank Account Status (Yes/No)
-- Marital Status
-
-Do NOT add unnecessary fields.
-
------------------------------------
-STEP 2: RULE REPRESENTATION
------------------------------------
-For each scheme, express eligibility ONLY in strict IF-THEN logic.
-
-Example format:
-IF [conditions]
-THEN eligible_for_[scheme] = TRUE
-
-Rules must:
-- Avoid natural language summaries
-- Avoid assumptions
-- Mark ambiguity explicitly using:
-  ambiguity_flag = TRUE
-
------------------------------------
-STEP 3: MATCHING ENGINE LOGIC
------------------------------------
-Design the core algorithm that:
-1. Takes user input
-2. Evaluates all scheme rules
-3. Outputs:
-   - Fully eligible schemes
-   - Conditionally eligible schemes (with missing requirements)
-   - Not eligible schemes
-
-Each output must include:
-- Rule trace (which rules passed/failed)
-- Confidence score (HIGH / MEDIUM / LOW)
-- Reason for confidence level
-
------------------------------------
-STEP 4: AMBIGUITY HANDLING
------------------------------------
-Your system MUST detect and handle ambiguity.
-
-For each scheme evaluation:
-- If any rule is unclear, conflicting, or incomplete:
-  → Do NOT assume
-  → Mark:
-     ambiguity_flag = TRUE
-
-Also:
-- List ALL possible interpretations
-- Reduce confidence score accordingly
-
------------------------------------
-STEP 5: DEPENDENCY HANDLING
------------------------------------
-Some schemes require prerequisites (e.g., bank account, Aadhaar).
-
-Implement logic such that:
-IF prerequisite_missing == TRUE
-THEN:
-  - Mark scheme as "conditionally eligible"
-  - Output required steps to become eligible
-
------------------------------------
-STEP 6: EDGE CASE RESILIENCE
------------------------------------
-Your system must handle:
-- Missing inputs
-- Contradictory inputs
-- Boundary values (exact cutoffs)
-
-Define how the engine behaves in each case.
-
------------------------------------
-STEP 7: OUTPUT FORMAT
------------------------------------
-Return output in structured JSON format:
-
-{
-  "eligible_schemes": [],
-  "conditional_schemes": [
-    {
-      "scheme": "",
-      "missing_requirements": [],
-      "confidence": "",
-      "explanation": ""
-    }
-  ],
-  "not_eligible_schemes": [],
-  "ambiguities_detected": []
-}
-
------------------------------------
-IMPORTANT CONSTRAINTS
------------------------------------
-- Do NOT hallucinate scheme rules
-- If scheme data is missing or unclear → explicitly say so
-- Prefer “uncertain” over “wrong but confident”
-- Do NOT generalize beyond given rules
-
------------------------------------
-FINAL TASK
------------------------------------
-Design the system step-by-step and provide:
-1. Input schema
-2. Sample rule definitions for at least 3 schemes
-3. Matching algorithm (pseudo-code)
-4. Example output for one user
+alright now give me a well structured prompt that I can give to claude so that it starts working on the logic and the engine itself.
 
 Look into MISSION 03.docx and analyze it. Understand the task and all its requirements. I will provide you with the 15+ schemes.
 You are designing a backend AI system called “KALAM” that matches Indian citizens to government welfare schemes.
@@ -265,6 +139,285 @@ Design the system step-by-step and provide:
 2. Sample rule definitions for at least 3 schemes
 3. Matching algorithm (pseudo-code)
 4. Example output for one user
+
+Look into MISSION 03.docx and analyze it. Understand the task and all its requirements. I will provide you with the 15+ schemes.
+You are designing a backend AI system called “KALAM” that matches Indian citizens to government welfare schemes.
+
+This is NOT a summarization task. This is a LOGIC ENGINE design task.
+
+Your goal is to build a rule-based eligibility and matching engine that is:
+1. Explicit (no vague language)
+2. Explainable (every output must trace back to rules)
+3. Uncertainty-aware (must NOT assume missing data)
+4. Resistant to hallucination
+
+-----------------------------------
+STEP 1: INPUT SCHEMA
+-----------------------------------
+Define a structured input schema for a user with the following fields:
+- Age
+- Gender
+- State
+- Rural/Urban
+- Annual Income
+- Occupation
+- Land Ownership (in hectares)
+- Land Leasing Status
+- Caste Category
+- Family Size
+- Aadhaar Status (Yes/No)
+- Bank Account Status (Yes/No)
+- Marital Status
+
+Do NOT add unnecessary fields.
+
+-----------------------------------
+STEP 2: RULE REPRESENTATION
+-----------------------------------
+For each scheme, express eligibility ONLY in strict IF-THEN logic.
+
+Example format:
+IF [conditions]
+THEN eligible_for_[scheme] = TRUE
+
+Rules must:
+- Avoid natural language summaries
+- Avoid assumptions
+- Mark ambiguity explicitly using:
+  ambiguity_flag = TRUE
+
+-----------------------------------
+STEP 3: MATCHING ENGINE LOGIC
+-----------------------------------
+Design the core algorithm that:
+1. Takes user input
+2. Evaluates all scheme rules
+3. Outputs:
+   - Fully eligible schemes
+   - Conditionally eligible schemes (with missing requirements)
+   - Not eligible schemes
+
+Each output must include:
+- Rule trace (which rules passed/failed)
+- Confidence score (HIGH / MEDIUM / LOW)
+- Reason for confidence level
+
+-----------------------------------
+STEP 4: AMBIGUITY HANDLING
+-----------------------------------
+Your system MUST detect and handle ambiguity.
+
+For each scheme evaluation:
+- If any rule is unclear, conflicting, or incomplete:
+  → Do NOT assume
+  → Mark:
+     ambiguity_flag = TRUE
+
+Also:
+- List ALL possible interpretations
+- Reduce confidence score accordingly
+
+-----------------------------------
+STEP 5: DEPENDENCY HANDLING
+-----------------------------------
+Some schemes require prerequisites (e.g., bank account, Aadhaar).
+
+Implement logic such that:
+IF prerequisite_missing == TRUE
+THEN:
+  - Mark scheme as "conditionally eligible"
+  - Output required steps to become eligible
+
+-----------------------------------
+STEP 6: EDGE CASE RESILIENCE
+-----------------------------------
+Your system must handle:
+- Missing inputs
+- Contradictory inputs
+- Boundary values (exact cutoffs)
+
+Define how the engine behaves in each case.
+
+-----------------------------------
+STEP 7: OUTPUT FORMAT
+-----------------------------------
+Return output in structured JSON format:
+
+{
+  "eligible_schemes": [],
+  "conditional_schemes": [
+    {
+      "scheme": "",
+      "missing_requirements": [],
+      "confidence": "",
+      "explanation": ""
+    }
+  ],
+  "not_eligible_schemes": [],
+  "ambiguities_detected": []
+}
+
+-----------------------------------
+IMPORTANT CONSTRAINTS
+-----------------------------------
+- Do NOT hallucinate scheme rules
+- If scheme data is missing or unclear → explicitly say so
+- Prefer “uncertain” over “wrong but confident”
+- Do NOT generalize beyond given rules
+
+-----------------------------------
+FINAL TASK
+-----------------------------------
+Design the system step-by-step and provide:
+1. Input schema
+2. Sample rule definitions for at least 3 schemes
+3. Matching algorithm (pseudo-code)
+4. Example output for one user
+
+You are a systems engineer building a RULE-BASED WELFARE ELIGIBILITY ENGINE.
+
+You are NOT allowed to give explanations. You must OUTPUT WORKING CODE.
+
+---
+
+INPUTS:
+
+1. A structured JSON dataset of government schemes (with eligibility, payment_requirements, exclusions, ambiguities)
+2. A user profile JSON
+
+---
+
+YOUR TASK:
+
+Build a deterministic decision engine that produces the following outputs:
+
+---
+
+### OUTPUT 1: ELIGIBILITY CLASSIFICATION
+
+For EACH scheme:
+
+Classify into:
+
+* "fully_eligible"
+* "partially_eligible"
+* "not_eligible"
+* "uncertain"
+
+Also compute:
+
+* confidence_score (0 to 1)
+
+Rules:
+
+* 1.0 → all eligibility conditions satisfied, no ambiguity
+* 0.7–0.9 → minor uncertainty or missing non-critical info
+* 0.4–0.6 → partially eligible (some conditions unmet)
+* <0.4 → mostly not eligible
+
+---
+
+### OUTPUT 2: GAP ANALYSIS (CRITICAL)
+
+For partially eligible schemes:
+
+Return:
+
+* missing_conditions
+* conflicting_conditions
+* suggested_actions
+
+Example:
+{
+"scheme": "PM-KISAN",
+"missing": ["land_ownership_proof"],
+"conflicts": [],
+"actions": ["obtain land record", "update Aadhaar seeding"]
+}
+
+---
+
+### OUTPUT 3: DOCUMENT CHECKLIST
+
+Aggregate ALL required documents across eligible + partially eligible schemes.
+
+Return:
+
+* unique_documents
+* priority_order
+
+Priority logic:
+
+1. Documents required by MOST schemes first
+2. Foundational docs (Aadhaar, bank account) highest priority
+3. Scheme-specific documents later
+
+---
+
+### OUTPUT 4: APPLICATION SEQUENCING
+
+Build a dependency graph between schemes.
+
+Examples:
+
+* Bank account → prerequisite for DBT schemes
+* Aadhaar → required before most enrollments
+
+Return:
+
+* ordered list of schemes
+* reasoning for order
+
+---
+
+### ENGINE REQUIREMENTS
+
+* Must be modular (functions/classes)
+* Must separate:
+
+  * eligibility logic
+  * scoring logic
+  * dependency resolution
+* Must handle:
+
+  * missing data
+  * ambiguous conditions
+* Must NOT assume missing fields = false
+
+---
+
+### INPUT FORMAT EXAMPLE
+
+user_profile = {
+"age": 32,
+"income": 200000,
+"occupation": "farmer",
+"land_owned": false,
+"has_bank_account": true,
+"aadhaar_linked": false,
+"gender": "female",
+"rural": true
+}
+
+---
+
+### OUTPUT FORMAT (STRICT JSON)
+
+{
+"eligible_schemes": [...],
+"partially_eligible_schemes": [...],
+"gap_analysis": [...],
+"document_checklist": [...],
+"application_sequence": [...]
+}
+
+---
+
+### FINAL INSTRUCTION
+
+Write FULL WORKING CODE (preferably Python).
+No pseudocode.
+No explanations.
 
 
 "When a user uses that chat option, instead of showing all the results in the chatbox itself, I want you to present it in the same format as the form mode. " Has this been implemented?
@@ -306,3 +459,210 @@ Text: Deep brown/charcoal (#2E2925) for extremely clear readability, replacing w
 Font: Add the Outfit font for a modern but friendly structure, alongside Inter and Noto Sans Devanagari for excellent readability in English, Hinglish, and Hindi.(Dont change font of kalam on landing page. leave it as it is)
 2. Landing Page
 The landing page text will also adapt based on language (en, hinglish, hi). For this add the language option on the landing page itself. The tagline+get started should change on the basis of language selected.
+
+Samajh gaye: Kaam: Berozgaar, Category: SC.
+Aapki umar kitni hai? (saal mein batayein)
+33
+✅ Samajh gaye: Kaam: Berozgaar, Category: SC.
+Aapki umar kitni hai? (saal mein batayein)
+33
+✅ Samajh gaye: Kaam: Berozgaar, Category: SC.
+Aapki umar kitni hai? (saal mein batayein)
+33
+✅ Samajh gaye: Kaam: Berozgaar, Category: SC.
+Aapki umar kitni hai? (saal mein batayein)
+33
+✅ Samajh gaye: Kaam: Berozgaar, Category: SC.
+Aapki umar kitni hai? (saal mein batayein)
+33
+✅ Samajh gaye: Kaam: Berozgaar, Category: SC.
+Aapki umar kitni hai? (saal mein batayein)
+It keeps getting stuck in a loop. I had told you earlier also to fix this but this still persists. I need this fixed ASAP!! Any mistake means getting rejected and that is not an option. Seriously fix all such loops properly this time
+
+The user might use different spellings for different words or may say something in a different way than expected. This causes problems in the chat option and causes it to get stuck in an endless loop. This happens particularly in Hinglish and Hindi chat. Look into it and fix all such issues.
+
+You are a multilingual AI testing expert and adversarial evaluator.
+
+Your task is to TEST and BREAK the Hinglish and Hindi understanding capabilities of an AI welfare eligibility engine.
+
+The system claims it can understand:
+
+* English
+* Hindi
+* Hinglish (Hindi + English mixed language)
+
+Your goal is to PROVE whether this claim is true or false.
+
+Default stance: The system is weak unless proven otherwise.
+
+---
+
+## CONTEXT
+
+The engine converts natural language user inputs into structured data such as:
+
+* income
+* occupation
+* land ownership
+* Aadhaar availability
+* bank account status
+* state
+
+---
+
+## PART 1: TEST CASE GENERATION (VERY IMPORTANT)
+
+Generate at least 20 diverse user inputs including:
+
+### Hinglish (casual)
+
+Examples:
+
+* "mere paas zameen nahi hai but main kheti karta hu"
+* "income lagbhag 2-3 lakh hogi"
+* "bank account hai lekin aadhaar link nahi hai"
+
+### Pure Hindi
+
+Examples:
+
+* "मेरे पास कोई भूमि नहीं है"
+* "मेरी वार्षिक आय लगभग 2 लाख है"
+
+### Messy Mixed Language
+
+* "main farmer hu but land papa ke naam pe hai"
+* "aadhaar hai par bank me link nahi kiya"
+
+### Ambiguous Statements
+
+* "thodi income hai"
+* "zameen hai par pata nahi kitni"
+
+### Regional Variations (important)
+
+* "humare paas kheti nahi hai"
+* "mai mazdoori karta hu"
+* "thoda bahut kama lete hain"
+
+---
+
+## PART 2: STRUCTURED EXTRACTION TEST
+
+For EACH input:
+
+1. Predict expected structured output:
+   Example:
+   Input: "mere paas bank account nahi hai"
+   Expected:
+   {
+   "bank_account": False
+   }
+
+2. Run through system (assume output)
+
+3. Compare:
+
+   * Correct extraction?
+   * Partial?
+   * Completely wrong?
+
+---
+
+## PART 3: FAILURE DETECTION
+
+Identify:
+
+* Misinterpretations
+* Missing fields
+* Wrong assumptions
+* Overconfidence
+
+If system guesses without evidence → CRITICAL FAILURE
+
+---
+
+## PART 4: AMBIGUITY HANDLING
+
+Check if system:
+
+* Marks uncertain inputs correctly
+* Asks follow-up questions
+
+Example:
+"thodi income hai" → should NOT assign a number
+
+---
+
+## PART 5: ROBUSTNESS TEST
+
+Test:
+
+* Typos
+* Informal grammar
+* Broken sentences
+
+Examples:
+
+* "mera adhar hai bank nai"
+* "income 2 lakh ke aas paas h"
+
+---
+
+## PART 6: HINGLISH NORMALIZATION AUDIT
+
+Evaluate:
+
+* Does system correctly map:
+
+  * "nahi hai" → False
+  * "hai" → True
+  * "nahi kiya" → False (action incomplete)
+
+* Does it understand context?
+
+---
+
+## PART 7: SCORING
+
+Give scores (0–10):
+
+* Hinglish understanding
+* Hindi understanding
+* Ambiguity handling
+* Robustness to messy input
+
+---
+
+## PART 8: FINAL VERDICT
+
+You MUST provide:
+
+1. PASS or FAIL
+2. Top 10 failure cases
+3. Critical weaknesses
+4. Exact improvements required
+
+---
+
+## STRICT RULES
+
+* Be harsh and realistic
+* Assume real users are NOT clean speakers
+* Do NOT give benefit of doubt
+* Prioritize real-world usability over theoretical correctness
+
+---
+
+## OUTPUT FORMAT
+
+Structured report with:
+
+* Test cases
+* Expected vs actual
+* Failures
+* Final verdict
+
+No vague feedback.
+
+
