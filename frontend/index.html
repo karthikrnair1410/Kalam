@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="hi-Latn" id="htmlRoot">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>KALAM — Welfare Eligibility Engine</title>
+  <meta name="description" content="KALAM: Indian welfare scheme matcher in English, Hinglish, and Hindi. Rule-based, explainable AI."/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    @import url('https://fonts.cdnfonts.com/css/samarkan');
+    :root{
+      --bg:     #FDFBF7; --bg2: #FFFFFF; --card: #FFFFFF; --card2: #F9F7F1;
+      --border: #E8E3DB; --border2: #D3CDC1;
+      --acc:    #D96A36; --acc-glow: rgba(217,106,54,.15);
+      --green:  #4BA365; --yellow: #ECA328; --red: #D94A4A;
+      --purple: #8163B6; --orange: #D96A36;
+      --t1: #2E2925; --t2: #6A6158; --t3: #A19992;
+      --mono: 'JetBrains Mono',monospace;
+      --sans: 'Outfit','Inter',sans-serif;
+      --deva: 'Noto Sans Devanagari','Outfit','Inter',sans-serif;
+      --kalam-font: 'Samarkan', sans-serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0; scroll-behavior: smooth;}
+    body{font-family:var(--sans);background:var(--bg);color:var(--t1);min-height:100vh;line-height:1.6;}
+    .hindi-mode body,.hindi-mode .form-panel,.hindi-mode label,.hindi-mode .chat-msg,.hindi-mode .chat-input{font-family:var(--deva)!important;}
+
+    /* ── LANDING PAGE ── */
+    #landingPage {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #FDFBF7 0%, #F5EFE6 100%);
+      position: relative;
+      text-align: center;
+      padding: 2rem;
+    }
+    .landing-kalam {
+      font-family: var(--kalam-font);
+      font-size: 8rem;
+      color: var(--t1);
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+      text-shadow: 2px 4px 10px rgba(0,0,0,0.05);
+    }
+    @media(max-width:768px){.landing-kalam{font-size:5rem;}}
+    .landing-tagline {
+      font-size: 1.2rem;
+      color: var(--t2);
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      margin-bottom: 3rem;
+      font-family: var(--sans);
+    }
+    .scroll-down {
+      position: absolute;
+      bottom: 2.5rem;
+      font-size: 1rem;
+      color: var(--acc);
+      text-decoration: none;
+      animation: bounce 2s infinite;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    .scroll-down svg {
+      width: 32px;
+      height: 32px;
+      stroke: currentColor;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-12px); }
+      60% { transform: translateY(-6px); }
+    }
+
+    /* ── HEADER ── */
+    header{background:#FFFFFF; border-bottom:1px solid var(--border);padding:.9rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;flex-wrap:wrap; box-shadow: 0 4px 20px rgba(0,0,0,0.03);}
+    .logo{font-family:var(--kalam-font); font-size:2.2rem; color:var(--acc); padding-top:0.2rem;}
+    .tagline{color:var(--t2);font-size:.8rem;font-style:italic;}
+    .header-right{margin-left:auto;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;}
+
+    /* ── LANGUAGE SELECTOR ── */
+    .lang-selector{display:flex;background:var(--card2);border:1px solid var(--border);border-radius:9999px;padding:.2rem;gap:.15rem;}
+    .lang-btn{padding:.35rem 1rem;border:none;background:transparent;border-radius:9999px;color:var(--t2);font-family:inherit;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;}
+    .lang-btn.active{background:var(--acc);color:white; box-shadow: 0 2px 10px var(--acc-glow);}
+    .lang-btn:hover:not(.active){color:var(--t1);background:var(--card);}
+    .lang-hi .lang-btn{font-family:var(--deva);}
+    .header-badge{background:var(--acc-glow);border:1px solid rgba(217,106,54,.3);color:var(--acc);font-size:.65rem;padding:.2rem .6rem;border-radius:9999px;font-weight:600;white-space:nowrap;}
+
+    /* ── TABS ── */
+    .tab-bar{display:flex;border-bottom:1px solid var(--border);padding:0 1.5rem;background:var(--bg2);}
+    .tab-btn{padding:.9rem 1.5rem;background:none;border:none;color:var(--t2);font-family:inherit;font-size:.85rem;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;letter-spacing:.04em;}
+    .tab-btn:hover{color:var(--acc);}
+    .tab-btn.active{color:var(--acc);border-bottom-color:var(--acc);}
+    .tab-content{display:none;}
+    .tab-content.active{display:block;}
+
+    /* ── FORM LAYOUT ── */
+    .container{max-width:950px;margin:0 auto;padding:2rem 1.5rem;display:flex;flex-direction:column;gap:2rem;align-items:stretch;}
+    .form-panel{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:2rem; box-shadow: 0 8px 30px rgba(0,0,0,0.03);}
+    .panel-title{font-size:.75rem;font-weight:700;letter-spacing:.15em;color:var(--acc);text-transform:uppercase;margin-bottom:1.2rem;}
+    .form-group{margin-bottom:.9rem;}
+    label{display:block;font-size:.75rem;font-weight:600;color:var(--t2);margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.06em;}
+    input,select{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:.65rem .85rem;color:var(--t1);font-family:inherit;font-size:.9rem;transition:all .2s;outline:none;appearance:none;}
+    .lang-hi input,.lang-hi select,.lang-hi label{font-family:var(--deva)!important;}
+    input:focus,select:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-glow); background:var(--card);}
+    select option{background:var(--card);}
+    .form-grid-3{display:grid;grid-template-columns:repeat(3, 1fr);gap:1.2rem;}
+    @media(max-width:768px){.form-grid-3{grid-template-columns:1fr;}}
+    .submit-btn{width:100%;margin-top:1.5rem;padding:.9rem;background:linear-gradient(135deg,var(--acc),#E0875C);border:none;border-radius:12px;color:white;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit; box-shadow: 0 4px 15px var(--acc-glow);}
+    .submit-btn:hover{transform:translateY(-2px); box-shadow: 0 6px 20px var(--acc-glow);}
+    .submit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;}
+    .btn-secondary{width:100%;margin-top:.6rem;padding:.65rem;background:transparent;border:1px solid var(--border2);border-radius:10px;color:var(--t2);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;}
+    .btn-secondary:hover{background:var(--card2);color:var(--t1);border-color:var(--acc);}
+
+    /* ── RESULTS ── */
+    .results-panel{display:flex;flex-direction:column;gap:1.5rem;}
+    .placeholder-state{background:var(--card);border:2px dashed var(--border2);border-radius:18px;padding:5rem 2rem;text-align:center;color:var(--t3);}
+    .placeholder-state h2{font-size:1.1rem;margin-bottom:.6rem;color:var(--t2);font-weight:600;}
+
+    /* ── CARD SECTIONS ── */
+    .section{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow: 0 4px 25px rgba(0,0,0,0.02);}
+    .section-header{display:flex;align-items:center;gap:.75rem;padding:1rem 1.25rem;border-bottom:1px solid var(--border); background:var(--bg);}
+    .section-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.95rem;}
+    .icon-green{background:rgba(75,163,101,.15);} .icon-yellow{background:rgba(236,163,40,.15);}
+    .icon-purple{background:rgba(129,99,182,.15);} .icon-red{background:rgba(217,74,74,.15);}
+    .icon-blue{background:var(--acc-glow);}
+    .section-title{font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
+    .section-count{margin-left:auto;background:var(--card);border:1px solid var(--border);border-radius:9999px;padding:.15rem .6rem;font-size:.7rem;font-weight:700;font-family:var(--mono); color:var(--t1);}
+    .section-body{padding:1.25rem;}
+
+    .summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;}
+    .summary-item{background:var(--card2);border-radius:12px;padding:1.1rem;text-align:center;border:1px solid var(--border);}
+    .summary-count{font-size:2.2rem;font-weight:800;line-height:1;}
+    .summary-label{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--t2);margin-top:.4rem;}
+    .count-green{color:var(--green);} .count-yellow{color:var(--yellow);}
+    .count-purple{color:var(--purple);} .count-red{color:var(--red);}
+
+    .scheme-list{display:flex;flex-direction:column;gap:.65rem;}
+    .scheme-item{background:var(--card);border-radius:12px;border:1px solid var(--border);overflow:hidden;cursor:pointer;transition:all .2s;}
+    .scheme-item:hover{border-color:var(--border2); transform:translateY(-1px); box-shadow: 0 4px 15px rgba(0,0,0,0.03);}
+    .scheme-item.expanded{border-color:var(--acc); box-shadow: 0 4px 15px var(--acc-glow);}
+    .scheme-header{padding:1rem;display:flex;align-items:center;gap:.75rem;}
+    .scheme-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+    .dot-green{background:var(--green);box-shadow:0 0 6px var(--green);}
+    .dot-yellow{background:var(--yellow);box-shadow:0 0 6px var(--yellow);}
+    .dot-purple{background:var(--purple);box-shadow:0 0 6px var(--purple);}
+    .dot-red{background:var(--red);box-shadow:0 0 6px var(--red);}
+    .scheme-name{font-size:.9rem;font-weight:600;flex:1;}
+    .scheme-id{font-size:.65rem;font-family:var(--mono);color:var(--t3); margin-top:.15rem;}
+    .cbar-wrap{margin-left:auto;display:flex;align-items:center;gap:.5rem;}
+    .cbar{width:70px;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+    .cbar-fill{height:100%;border-radius:2px;transition:width .4s;}
+    .cscore{font-size:.78rem;font-family:var(--mono);font-weight:700;min-width:32px;text-align:right;}
+    .cbadge{display:inline-block;padding:.15rem .45rem;border-radius:6px;font-size:.65rem;font-weight:800;text-transform:uppercase;}
+    .badge-HIGH{background:rgba(75,163,101,.15);color:var(--green);}
+    .badge-MEDIUM{background:rgba(236,163,40,.15);color:var(--yellow);}
+    .badge-LOW{background:rgba(217,74,74,.12);color:var(--red);}
+    .scheme-details{display:none;border-top:1px solid var(--border);padding:1.1rem; background:var(--card2);}
+    .scheme-item.expanded .scheme-details{display:block;}
+    .trace-table{width:100%;border-collapse:collapse;font-size:.8rem;margin-top:.6rem;}
+    .trace-table th{text-align:left;padding:.45rem .65rem;background:var(--card);color:var(--t2);font-size:.68rem;font-weight:700;text-transform:uppercase;border-bottom:1px solid var(--border);}
+    .trace-table td{padding:.4rem .65rem;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:.78rem; background:var(--card2);}
+    .trace-table tr:last-child td{border-bottom:none;}
+    .sbadge{display:inline-block;padding:.15rem .45rem;border-radius:4px;font-size:.62rem;font-weight:700;text-transform:uppercase;}
+    .sbadge-passed{background:rgba(75,163,101,.15);color:var(--green);}
+    .sbadge-failed{background:rgba(217,74,74,.15);color:var(--red);}
+    .sbadge-uncertain{background:rgba(236,163,40,.15);color:var(--yellow);}
+    .sbadge-skipped{background:rgba(161,153,146,.15);color:var(--t2);}
+
+    .hinglish-panel{background:linear-gradient(135deg,rgba(217,106,54,.06),rgba(224,135,92,.06));border:1px solid rgba(217,106,54,.2);border-radius:14px;padding:1.4rem;margin-bottom:1.5rem;}
+    .hinglish-label{font-size:.68rem;font-weight:800;color:var(--acc);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.6rem;}
+    .hinglish-text{font-size:.95rem;color:var(--t1);line-height:1.75; font-weight:500;}
+    .hinglish-list{list-style:none;padding:0;}
+    .hinglish-list li{padding:.45rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--t2); font-weight:500;}
+    .hinglish-list li:last-child{border-bottom:none;}
+    .lang-hi .hinglish-panel,.lang-hi .hinglish-text,.lang-hi .hinglish-list{font-family:var(--deva)!important;}
+
+    .warning-box{background:rgba(236,163,40,.08);border:1px solid rgba(236,163,40,.3);border-radius:12px;padding:1.1rem;margin-bottom:1.1rem;}
+    .warning-box h4{color:var(--yellow);font-size:.78rem;font-weight:800;text-transform:uppercase;margin-bottom:.4rem;}
+    .error-box{background:rgba(217,74,74,.08);border:1px solid rgba(217,74,74,.3);border-radius:12px;padding:1.1rem;}
+    .error-box h4{color:var(--red);font-size:.78rem;font-weight:800;text-transform:uppercase;margin-bottom:.4rem;}
+    .ambiguity-item{background:rgba(236,163,40,.06);border:1px solid rgba(236,163,40,.2);border-radius:10px;padding:.85rem;margin-bottom:.5rem;}
+    .ambiguity-type{font-size:.68rem;font-weight:800;font-family:var(--mono);color:var(--yellow);margin-bottom:.25rem;}
+    .ambiguity-desc{font-size:.85rem;color:var(--t2); font-weight:500;}
+    .ambiguity-penalty{font-size:.68rem;color:var(--orange);margin-top:.25rem;font-family:var(--mono); font-weight:600;}
+    .gap-box{margin-top:.75rem;padding:.85rem;background:rgba(129,99,182,.06);border:1px solid rgba(129,99,182,.2);border-radius:10px;}
+    .gap-label{font-size:.68rem;font-weight:800;color:var(--purple);text-transform:uppercase;margin-bottom:.4rem;}
+
+    .spinner-wrap{display:flex;align-items:center;justify-content:center;padding:4rem;flex-direction:column;gap:1.1rem;}
+    .spinner{width:45px;height:45px;border:4px solid var(--border);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+
+    /* ── CHAT TAB ── */
+    .chat-container{max-width:850px;margin:0 auto;padding:2rem 1.5rem;display:flex;flex-direction:column;gap:1.6rem;}
+    .chat-window{background:var(--card);border:1px solid var(--border);border-radius:18px;min-height:420px;max-height:580px;overflow-y:auto;padding:1.4rem;display:flex;flex-direction:column;gap:1.1rem; box-shadow: inset 0 2px 10px rgba(0,0,0,0.01);}
+    .chat-msg{max-width:82%;padding:.85rem 1.1rem;border-radius:16px;font-size:.95rem;line-height:1.65; font-weight:500;}
+    .chat-msg.bot{background:var(--card2);border:1px solid var(--border);color:var(--t1);align-self:flex-start;border-bottom-left-radius:4px;}
+    .chat-msg.user{background:linear-gradient(135deg,var(--acc),#E0875C);color:white;align-self:flex-end;border-bottom-right-radius:4px; box-shadow: 0 4px 12px var(--acc-glow);}
+    .chat-msg.system{background:rgba(236,163,40,.08);border:1px solid rgba(236,163,40,.2);color:var(--yellow);align-self:center;font-size:.85rem;max-width:100%;text-align:center;border-radius:10px;}
+    .lang-hi .chat-msg{font-family:var(--deva)!important;}
+    .chat-input-row{display:flex;gap:.8rem;}
+    .chat-input{flex:1;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.1rem 1.4rem;color:var(--t1);font-family:inherit;font-size:.95rem;outline:none;transition:all .2s;resize:none; box-shadow: 0 4px 20px rgba(0,0,0,0.02);}
+    .lang-hi .chat-input{font-family:var(--deva)!important;}
+    .chat-input:focus{border-color:var(--acc);box-shadow:0 0 0 4px var(--acc-glow); background:var(--card2);}
+    .chat-send-btn{background:linear-gradient(135deg,var(--acc),#E0875C);border:none;border-radius:16px;padding:.85rem 1.75rem;color:white;font-weight:700;cursor:pointer;font-size:.95rem;transition:all .2s;font-family:inherit;white-space:nowrap; box-shadow: 0 4px 15px var(--acc-glow);}
+    .chat-send-btn:hover{transform:translateY(-2px); box-shadow: 0 6px 20px var(--acc-glow);}
+    .chat-send-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;}
+    .hint-chips{display:flex;flex-wrap:wrap;gap:.55rem;}
+    .hint-chip{background:var(--card);border:1px solid var(--border);border-radius:9999px;padding:.4rem .9rem;font-size:.8rem;color:var(--t2);font-weight:500;cursor:pointer;transition:all .2s;font-family:inherit;}
+    .lang-hi .hint-chip{font-family:var(--deva)!important;}
+    .hint-chip:hover{background:var(--acc-glow);color:var(--acc);border-color:var(--acc);}
+    .field-pills{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.6rem;}
+    .field-pill{background:var(--acc-glow);border:1px solid rgba(217,106,54,.25);border-radius:9999px;padding:.2rem .8rem;font-size:.75rem;font-weight:600;color:var(--acc);font-family:var(--mono);}
+    .progress-wrap{display:flex;align-items:center;gap:.8rem;}
+    .progress-bar{flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden;}
+    .progress-fill{height:100%;background:linear-gradient(90deg,var(--acc),#ECA328);border-radius:4px;transition:width .4s;}
+    .progress-label{font-size:.8rem;color:var(--t2);font-weight:700;font-family:var(--mono);min-width:48px;}
+
+    /* ── CHAT RESULTS PANEL ── */
+    .chat-results-panel{display:none;flex-direction:column;gap:1.5rem;margin-top:1.2rem;}
+    .chat-results-panel.visible{display:flex;animation:fadeSlideIn .4s ease;}
+    @keyframes fadeSlideIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+    .chat-results-header{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.4rem;
+      background:linear-gradient(135deg,rgba(217,106,54,.1),rgba(224,135,92,.1));
+      border:1px solid rgba(217,106,54,.25);border-radius:14px;}
+    .chat-results-title{font-size:.9rem;font-weight:800;color:var(--acc);letter-spacing:.05em;}
+    .new-query-btn{background:var(--card);border:1px solid var(--border2);border-radius:10px;
+      padding:.4rem 1.1rem;color:var(--t2);font-size:.8rem;font-weight:700;cursor:pointer;
+      font-family:inherit;transition:all .2s;white-space:nowrap;}
+    .new-query-btn:hover{background:var(--card2);color:var(--t1);border-color:var(--acc);}
+
+    @media(max-width:960px){.summary-grid{grid-template-columns:repeat(2,1fr);}}
+    ::-webkit-scrollbar{width:8px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
+  </style>
+</head>
+<body>
+
+<!-- ═══ LANDING PAGE ═══ -->
+<div id="landingPage">
+  <div class="lang-selector" style="position: absolute; top: 1.5rem; right: 1.5rem;">
+    <button class="lang-btn" id="lb-en-landing"  onclick="setLang('en')">English</button>
+    <button class="lang-btn active" id="lb-hinglish-landing" onclick="setLang('hinglish')">Hinglish</button>
+    <button class="lang-btn" id="lb-hi-landing"  onclick="setLang('hi')">हिन्दी</button>
+  </div>
+  <div class="landing-kalam">kalam</div>
+  <div class="landing-tagline" id="hTaglineLanding">"Intelligence for the people who need it most"</div>
+  <a href="#appContent" class="scroll-down">
+    <span id="landingStartText">Start Engine</span>
+    <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+  </a>
+</div>
+
+<!-- ═══ APP CONTENT ═══ -->
+<div id="appContent">
+<header>
+  <div>
+    <div class="logo">kalam</div>
+    <div class="tagline" id="hTagline">"Intelligence for the people who need it most"</div>
+  </div>
+  <div class="header-right">
+    <!-- Language Selector -->
+    <div class="lang-selector" id="langSelector">
+      <button class="lang-btn" id="lb-en"  onclick="setLang('en')">English</button>
+      <button class="lang-btn active" id="lb-hinglish" onclick="setLang('hinglish')">Hinglish</button>
+      <button class="lang-btn" id="lb-hi"  onclick="setLang('hi')">हिन्दी</button>
+    </div>
+    <div class="header-badge" id="hBadge">v1.2.0 · 20 Schemes</div>
+  </div>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" id="tab-form-btn" onclick="switchTab('form')" data-i18n="tab_form">📋 Form Mode</button>
+  <button class="tab-btn" id="tab-chat-btn" onclick="switchTab('chat')" data-i18n="tab_chat">💬 Chat Mode</button>
+</div>
+
+<!-- ═══ TAB 1: FORM ═══ -->
+<div class="tab-content active" id="tab-form">
+  <div class="container">
+    <aside class="form-panel">
+      <div class="panel-title" data-i18n="form_title">📋 Citizen Profile</div>
+      
+      <div class="form-grid-3">
+        <div class="form-group">
+          <label for="age" data-i18n="lbl_age">Age</label>
+          <input type="number" id="age" min="0" max="120" data-i18n-placeholder="ph_age" placeholder="e.g. 35"/>
+        </div>
+        
+        <div class="form-group">
+          <label for="gender" data-i18n="lbl_gender">Gender</label>
+          <select id="gender">
+            <option value="" data-i18n="opt_select">Select...</option>
+            <option value="MALE"        data-i18n="opt_male">Male</option>
+            <option value="FEMALE"      data-i18n="opt_female">Female</option>
+            <option value="TRANSGENDER" data-i18n="opt_trans">Transgender</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="state" data-i18n="lbl_state">State</label>
+          <select id="state">
+            <option value="" data-i18n="opt_select">Select State...</option>
+            <option value="IN-AP">Andhra Pradesh</option><option value="IN-AR">Arunachal Pradesh</option>
+            <option value="IN-AS">Assam</option><option value="IN-BR">Bihar</option>
+            <option value="IN-CG">Chhattisgarh</option><option value="IN-DL">Delhi</option>
+            <option value="IN-GA">Goa</option><option value="IN-GJ">Gujarat</option>
+            <option value="IN-HR">Haryana</option><option value="IN-HP">Himachal Pradesh</option>
+            <option value="IN-JK">Jammu &amp; Kashmir</option><option value="IN-JH">Jharkhand</option>
+            <option value="IN-KA">Karnataka</option><option value="IN-KL">Kerala</option>
+            <option value="IN-MP">Madhya Pradesh</option><option value="IN-MH">Maharashtra</option>
+            <option value="IN-MN">Manipur</option><option value="IN-ML">Meghalaya</option>
+            <option value="IN-MZ">Mizoram</option><option value="IN-NL">Nagaland</option>
+            <option value="IN-OD">Odisha</option><option value="IN-PB">Punjab</option>
+            <option value="IN-RJ">Rajasthan</option><option value="IN-SK">Sikkim</option>
+            <option value="IN-TN">Tamil Nadu</option><option value="IN-TS">Telangana</option>
+            <option value="IN-TR">Tripura</option><option value="IN-UP">Uttar Pradesh</option>
+            <option value="IN-UK">Uttarakhand</option><option value="IN-WB">West Bengal</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="area_type" data-i18n="lbl_area">Area</label>
+          <select id="area_type">
+            <option value="" data-i18n="opt_select">Select...</option>
+            <option value="RURAL" data-i18n="opt_rural">Rural (Gaon)</option>
+            <option value="URBAN" data-i18n="opt_urban">Urban (Sheher)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="family_size" data-i18n="lbl_family">Family Size</label>
+          <input type="number" id="family_size" min="1" data-i18n-placeholder="ph_family" placeholder="e.g. 4"/>
+        </div>
+
+        <div class="form-group">
+          <label for="annual_income" data-i18n="lbl_income">Annual Income (₹)</label>
+          <input type="number" id="annual_income" min="0" data-i18n-placeholder="ph_income" placeholder="e.g. 72000"/>
+        </div>
+
+        <div class="form-group">
+          <label for="occupation" data-i18n="lbl_occ">Occupation</label>
+          <select id="occupation">
+            <option value=""                   data-i18n="opt_select">Select...</option>
+            <option value="FARMER_OWNER"       data-i18n="opt_farmer_own">Farmer (Owner)</option>
+            <option value="FARMER_TENANT"      data-i18n="opt_farmer_ten">Farmer (Tenant)</option>
+            <option value="AGRICULTURAL_LABOURER" data-i18n="opt_aglab">Agri Labourer</option>
+            <option value="UNSKILLED_LABOURER" data-i18n="opt_unlab">Unskilled Labourer</option>
+            <option value="SELF_EMPLOYED"      data-i18n="opt_self">Self Employed</option>
+            <option value="SALARIED_PRIVATE"   data-i18n="opt_priv">Private Job</option>
+            <option value="SALARIED_GOVT"      data-i18n="opt_govt">Govt Job</option>
+            <option value="UNEMPLOYED"         data-i18n="opt_unemp">Unemployed</option>
+            <option value="STUDENT"            data-i18n="opt_student">Student</option>
+            <option value="OTHER"              data-i18n="opt_other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="land_owned_hectares" data-i18n="lbl_land">Land (Ha)</label>
+          <input type="number" id="land_owned_hectares" min="0" step="0.1" data-i18n-placeholder="ph_land" placeholder="Optional"/>
+        </div>
+
+        <div class="form-group">
+          <label for="land_leasing_status" data-i18n="lbl_land_st">Land Status</label>
+          <select id="land_leasing_status">
+            <option value="" data-i18n="opt_select">Select...</option>
+            <option value="OWNER"   data-i18n="opt_owner">Owner</option>
+            <option value="TENANT"  data-i18n="opt_tenant">Tenant</option>
+            <option value="NONE"    data-i18n="opt_none">None</option>
+            <option value="UNKNOWN" data-i18n="opt_unknown">Unknown</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="caste_category" data-i18n="lbl_caste">Caste</label>
+          <select id="caste_category">
+            <option value="" data-i18n="opt_select">Select...</option>
+            <option value="GEN">General</option>
+            <option value="OBC">OBC</option>
+            <option value="SC">SC</option>
+            <option value="ST">ST</option>
+            <option value="UNKNOWN" data-i18n="opt_unknown">Unknown</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="marital_status" data-i18n="lbl_marital">Marital Status</label>
+          <select id="marital_status">
+            <option value="" data-i18n="opt_select">Select...</option>
+            <option value="SINGLE"   data-i18n="opt_single">Single</option>
+            <option value="MARRIED"  data-i18n="opt_married">Married</option>
+            <option value="WIDOWED"  data-i18n="opt_widowed">Widowed</option>
+            <option value="DIVORCED" data-i18n="opt_divorced">Divorced</option>
+            <option value="UNKNOWN"  data-i18n="opt_unknown">Unknown</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="aadhaar_linked" data-i18n="lbl_aadhaar">Aadhaar</label>
+          <select id="aadhaar_linked">
+            <option value="" data-i18n="opt_select">Select...</option>
+            <option value="true"  data-i18n="opt_yes">✅ Yes / Haan</option>
+            <option value="false" data-i18n="opt_no">❌ No / Nahi</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="bank_account" data-i18n="lbl_bank">Bank Account</label>
+          <select id="bank_account">
+            <option value="" data-i18n="opt_select">Select...</option>
+            <option value="true"  data-i18n="opt_yes">✅ Yes / Haan</option>
+            <option value="false" data-i18n="opt_no">❌ No / Nahi</option>
+          </select>
+        </div>
+      </div> <!-- End .form-grid-3 -->
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <button class="submit-btn" id="evaluateBtn" onclick="evaluateProfile()" data-i18n="btn_evaluate">⚡ Evaluate Eligibility</button>
+        <button class="btn-secondary" style="margin-top: 1.5rem;" onclick="loadDemo()" data-i18n="btn_demo">Load Demo Profile</button>
+      </div>
+
+    </aside>
+
+    <main class="results-panel" id="resultsPanel">
+      <div class="placeholder-state">
+        <h2 data-i18n="ph_title">👆 Fill the form and evaluate</h2>
+        <p data-i18n="ph_sub">Or use the Chat Mode tab to describe your situation naturally!</p>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ═══ TAB 2: CHAT ═══ -->
+<div class="tab-content" id="tab-chat">
+  <div class="chat-container">
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon icon-blue">📡</div>
+        <span class="section-title" style="color:var(--acc)" data-i18n="prog_title">Profile Collection Progress</span>
+        <span class="section-count" id="progressLabel">0/12</span>
+      </div>
+      <div class="section-body">
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+          <span class="progress-label" id="progressPct">0%</span>
+        </div>
+        <div class="field-pills" id="collectedPills">
+          <span style="font-size:.7rem;color:var(--t3)" data-i18n="pills_empty">No fields collected yet...</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:.67rem;color:var(--t3);margin-bottom:.45rem;text-transform:uppercase;letter-spacing:.08em;" data-i18n="hints_label">💡 Try these examples:</div>
+      <div class="hint-chips" id="hintChips"></div>
+    </div>
+
+    <div class="chat-window" id="chatWindow"></div>
+
+    <div class="chat-input-row">
+      <textarea class="chat-input" id="chatInput" rows="2" onkeydown="handleChatKey(event)"></textarea>
+      <button class="chat-send-btn" id="chatSendBtn" onclick="sendChatMessage()" data-i18n="btn_send">Send ▶</button>
+    </div>
+    <div style="text-align:center;font-size:.68rem;color:var(--t3)" data-i18n="chat_hint">Press Enter or click Send — Shift+Enter for new line</div>
+
+    <!-- ── CHAT RESULTS (rendered after evaluation) ── -->
+    <div id="chatResultsPanel" class="chat-results-panel"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// TRANSLATIONS
+// ═══════════════════════════════════════════════════════════════
+const T = {
+  en: {
+    tab_form:"📋 Form Mode", tab_chat:"💬 Chat Mode",
+    form_title:"📋 Citizen Profile",
+    lbl_age:"Age", lbl_gender:"Gender", lbl_state:"State",
+    lbl_area:"Area Type", lbl_family:"Family Size", lbl_income:"Annual Income (₹)",
+    lbl_occ:"Occupation", lbl_land:"Land (Ha)", lbl_land_st:"Land Status",
+    lbl_caste:"Caste", lbl_marital:"Marital Status",
+    lbl_aadhaar:"Aadhaar Card", lbl_bank:"Bank Account",
+    ph_age:"e.g. 35", ph_family:"e.g. 4", ph_income:"e.g. 72000", ph_land:"Optional",
+    opt_select:"Select...", opt_male:"Male", opt_female:"Female", opt_trans:"Transgender",
+    opt_rural:"Rural (Village)", opt_urban:"Urban (City)",
+    opt_farmer_own:"Farmer (Land Owner)", opt_farmer_ten:"Farmer (Tenant)",
+    opt_aglab:"Agricultural Labourer", opt_unlab:"Unskilled Labourer",
+    opt_self:"Self Employed / Business", opt_priv:"Private Sector Job",
+    opt_govt:"Government Job", opt_unemp:"Unemployed", opt_student:"Student", opt_other:"Other",
+    opt_owner:"Owner", opt_tenant:"Tenant", opt_none:"None", opt_unknown:"Unknown",
+    opt_single:"Single", opt_married:"Married", opt_widowed:"Widowed", opt_divorced:"Divorced",
+    opt_yes:"✅ Yes", opt_no:"❌ No",
+    btn_evaluate:"⚡ Evaluate Eligibility", btn_demo:"Load Demo Profile",
+    ph_title:"👆 Fill the profile and evaluate", ph_sub:"Or use Chat Mode to describe your situation in natural language!",
+    prog_title:"Profile Collection Progress", pills_empty:"No fields collected yet...",
+    hints_label:"💡 Try these examples:", btn_send:"Send ▶",
+    chat_hint:"Press Enter or Send — Shift+Enter for new line",
+    chat_welcome:"🙏 <strong>Hello!</strong> I'm KALAM — your welfare scheme assistant.<br><br>Describe your situation and I'll match you to government schemes.<br>Example: <em>\"I am a farmer in UP, income 72000\"</em>",
+    badge:"v1.2.0 · 20 Schemes · Trilingual ✓",
+    tagline:'"Intelligence for the people who need it most"',
+    result_lang_label:"Summary",
+    result_eligible:"Eligible Schemes",
+    result_partial:"Partially Eligible",
+    result_uncertain:"Uncertain",
+    result_not_eligible:"Not Eligible",
+    result_steps:"Next Steps",
+    result_docs:"Documents Required",
+    result_ambiguity:"Ambiguity Map",
+    btn_start:"Start Engine",
+  },
+  hinglish: {
+    tab_form:"📋 Form Mode", tab_chat:"💬 Hinglish Chat",
+    form_title:"📋 Citizen Profile",
+    lbl_age:"Umar (Age)", lbl_gender:"Gender", lbl_state:"State / Rajya",
+    lbl_area:"Area (Sheher / Gaon)", lbl_family:"Ghar mein kitne log", lbl_income:"Saalana Income (₹)",
+    lbl_occ:"Kaam (Occupation)", lbl_land:"Zameen (Hectare)", lbl_land_st:"Zameen ki Status",
+    lbl_caste:"Jaati (Caste)", lbl_marital:"Marital Status",
+    lbl_aadhaar:"Aadhaar Card", lbl_bank:"Bank Account",
+    ph_age:"jaise 35", ph_family:"jaise 4", ph_income:"jaise 72000", ph_land:"Optional",
+    opt_select:"Select karein...", opt_male:"Male (Mard)", opt_female:"Female (Aurat)", opt_trans:"Transgender",
+    opt_rural:"Rural (Gaon)", opt_urban:"Urban (Sheher)",
+    opt_farmer_own:"Kisan (Zameen ka Maalik)", opt_farmer_ten:"Kisan (Kiraayedaar)",
+    opt_aglab:"Khet Mazdoor", opt_unlab:"Mazdoor (Unskilled)",
+    opt_self:"Khud ka Kaam / Business", opt_priv:"Private Job",
+    opt_govt:"Sarkari Naukri", opt_unemp:"Berozgaar", opt_student:"Student", opt_other:"Aur",
+    opt_owner:"Apni Zameen (Owner)", opt_tenant:"Kiraaye pe (Tenant)", opt_none:"Zameen Nahi", opt_unknown:"Pata Nahi",
+    opt_single:"Single", opt_married:"Shaadishuda", opt_widowed:"Vidhwa", opt_divorced:"Divorced",
+    opt_yes:"✅ Haan", opt_no:"❌ Nahi",
+    btn_evaluate:"⚡ Eligibility Check Karein", btn_demo:"Demo Profile Load Karein",
+    ph_title:"👆 Profile bharein aur check karein", ph_sub:"Ya Chat Mode mein apni situation Hinglish mein batayen!",
+    prog_title:"Profile Progress", pills_empty:"Abhi koi field nahi mili...",
+    hints_label:"💡 Yeh try karein:", btn_send:"Bhejo ▶",
+    chat_hint:"Enter dabao ya Bhejo button — Shift+Enter se nai line",
+    chat_welcome:"🙏 <strong>Namaste!</strong> Main KALAM hu — aapka welfare scheme assistant.<br><br>Apni situation Hindi, English ya Hinglish mein batayein. Jaise:<br><em>\"Main kisan hu, UP se hu, 45 saal ki umar hai\"</em>",
+    badge:"v1.2.0 · 20 Schemes · Trilingual ✓",
+    tagline:'"Sabse zarooratmand logon ke liye intelligence"',
+    result_lang_label:"Aapke liye Summary",
+    result_eligible:"Eligible Schemes",
+    result_partial:"Almost Eligible (Kuch kaam baaki)",
+    result_uncertain:"Uncertain (Verify karein)",
+    result_not_eligible:"Eligible Nahi",
+    result_steps:"Next Steps (Kya karna hai)",
+    result_docs:"Zaroori Documents",
+    result_ambiguity:"Ambiguity Map",
+    btn_start:"Engine Shuru Karein",
+  },
+  hi: {
+    tab_form:"📋 प्रपत्र विधि", tab_chat:"💬 हिन्दी चैट",
+    form_title:"📋 नागरिक प्रोफ़ाइल",
+    lbl_age:"उम्र", lbl_gender:"लिंग", lbl_state:"राज्य",
+    lbl_area:"क्षेत्र प्रकार", lbl_family:"परिवार के सदस्य", lbl_income:"वार्षिक आय (₹)",
+    lbl_occ:"व्यवसाय", lbl_land:"ज़मीन (हेक्टेयर)", lbl_land_st:"ज़मीन की स्थिति",
+    lbl_caste:"जाति वर्ग", lbl_marital:"वैवाहिक स्थिति",
+    lbl_aadhaar:"आधार कार्ड", lbl_bank:"बैंक खाता",
+    ph_age:"जैसे 35", ph_family:"जैसे 4", ph_income:"जैसे 72000", ph_land:"वैकल्पिक",
+    opt_select:"चुनें...", opt_male:"पुरुष", opt_female:"महिला", opt_trans:"ट्रांसजेंडर",
+    opt_rural:"ग्रामीण (गाँव)", opt_urban:"शहरी (नगर)",
+    opt_farmer_own:"किसान (ज़मीन मालिक)", opt_farmer_ten:"किसान (किराएदार)",
+    opt_aglab:"खेत मज़दूर", opt_unlab:"अकुशल मज़दूर",
+    opt_self:"स्वरोज़गार / व्यापार", opt_priv:"निजी क्षेत्र की नौकरी",
+    opt_govt:"सरकारी नौकरी", opt_unemp:"बेरोज़गार", opt_student:"छात्र", opt_other:"अन्य",
+    opt_owner:"स्वामित्व (मालिक)", opt_tenant:"किराये पर", opt_none:"ज़मीन नहीं", opt_unknown:"ज्ञात नहीं",
+    opt_single:"अविवाहित", opt_married:"विवाहित", opt_widowed:"विधवा/विधुर", opt_divorced:"तलाकशुदा",
+    opt_yes:"✅ हाँ", opt_no:"❌ नहीं",
+    btn_evaluate:"⚡ पात्रता जाँचें", btn_demo:"नमूना प्रोफ़ाइल लोड करें",
+    ph_title:"👆 प्रपत्र भरें और जाँचें", ph_sub:"या चैट विधि में अपनी स्थिति हिन्दी में बताएँ!",
+    prog_title:"प्रोफ़ाइल संग्रह प्रगति", pills_empty:"अभी कोई जानकारी नहीं मिली...",
+    hints_label:"💡 ये वाक्य आज़माएँ:", btn_send:"भेजें ▶",
+    chat_hint:"Enter दबाएँ या भेजें बटन — नई पंक्ति के लिए Shift+Enter",
+    chat_welcome:"🙏 <strong>नमस्ते!</strong> मैं KALAM हूँ — आपका कल्याण योजना सहायक।<br><br>अपनी स्थिति हिन्दी में बताएँ, मैं सरकारी योजनाओं से मिलान करूँगा।<br>उदाहरण: <em>\"मैं किसान हूँ, UP में रहता हूँ, आय 72 हज़ार है\"</em>",
+    badge:"v1.2.0 · 20 योजनाएँ · त्रिभाषिक ✓",
+    tagline:'"सबसे ज़रूरतमंद लोगों के लिए बुद्धिमत्ता"',
+    result_lang_label:"आपके लिए सारांश",
+    result_eligible:"पात्र योजनाएँ",
+    result_partial:"आंशिक रूप से पात्र",
+    result_uncertain:"अनिश्चित (कार्यालय से जाँचें)",
+    result_not_eligible:"पात्र नहीं",
+    result_steps:"अगले कदम",
+    result_docs:"आवश्यक दस्तावेज़",
+    result_ambiguity:"अस्पष्टता मानचित्र",
+    btn_start:"इंजन शुरू करें",
+  }
+};
+
+const HINTS = {
+  en: [
+    "I am a farmer in UP, income 72000",
+    "My annual income is 2 lakh",
+    "I have Aadhaar but no bank account",
+    "I belong to SC category",
+    "I live in a village, family of 5",
+    "I have no land",
+    "I am 35 years old, married",
+    "I am unemployed, no job",
+  ],
+  hinglish: [
+    "main kisan hu, UP mein rehta hu",
+    "meri income 2 lakh hai",
+    "mere paas aadhaar hai but bank account nahi",
+    "main SC category se hu",
+    "gaon mein rehta hu, family mein 5 log hain",
+    "zameen nahi hai mere paas",
+    "main 35 saal ka hu, shaadishuda hu",
+    "berozgaar hu, koi kaam nahi",
+  ],
+  hi: [
+    "मैं किसान हूँ, UP में रहता हूँ",
+    "मेरी सालाना आय 2 लाख है",
+    "मेरे पास आधार है, बैंक खाता नहीं",
+    "मैं SC जाति वर्ग से हूँ",
+    "गाँव में रहता हूँ, परिवार में 5 लोग हैं",
+    "मेरे नाम पर कोई ज़मीन नहीं",
+    "मैं 35 साल का हूँ, शादीशुदा हूँ",
+    "बेरोज़गार हूँ, कोई काम नहीं",
+  ],
+};
+
+const API_BASE = window.location.origin;
+let LANG = 'hinglish';
+let chatSession = {};
+const TOTAL_FIELDS = 12;
+
+// ─────────────────────────────────────────────
+// LANGUAGE SYSTEM
+// ─────────────────────────────────────────────
+function t(key) { return (T[LANG] && T[LANG][key]) || T['hinglish'][key] || key; }
+
+function setLang(lang) {
+  LANG = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  let mainBtn = document.getElementById('lb-' + lang);
+  let landingBtn = document.getElementById('lb-' + lang + '-landing');
+  if (mainBtn) mainBtn.classList.add('active');
+  if (landingBtn) landingBtn.classList.add('active');
+
+  // Font class on body
+  document.body.classList.remove('lang-en','lang-hinglish','lang-hi');
+  document.body.classList.add('lang-' + lang);
+  document.getElementById('htmlRoot').setAttribute('lang', lang === 'hi' ? 'hi' : lang === 'hinglish' ? 'hi-Latn' : 'en');
+
+  applyTranslations();
+  buildHints();
+
+  // Reset chat with new welcome message in new lang
+  const win = document.getElementById('chatWindow');
+  win.innerHTML = '';
+  appendMsg(t('chat_welcome'), 'bot');
+
+  // Update chat placeholder
+  const placeholders = {en:"Type here in English...", hinglish:"Yahan Hinglish mein likhein...", hi:"यहाँ हिन्दी में लिखें..."};
+  document.getElementById('chatInput').placeholder = placeholders[lang] || '';
+
+  // Reset session
+  chatSession = {};
+  updateProgress({});
+}
+
+function applyTranslations() {
+  // data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (el.tagName === 'BUTTON' || el.tagName === 'SPAN' || el.tagName === 'DIV' || el.tagName === 'P' || el.tagName === 'H2' || el.tagName === 'LABEL') {
+      if (T[LANG][key] !== undefined) el.innerHTML = T[LANG][key];
+    }
+    if (el.tagName === 'OPTION') {
+      if (T[LANG][key] !== undefined) el.textContent = T[LANG][key];
+    }
+  });
+  // data-i18n-placeholder
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (T[LANG][key]) el.placeholder = T[LANG][key];
+  });
+  // Header and Landing
+  document.getElementById('hTagline').textContent = t('tagline');
+  document.getElementById('hBadge').textContent   = t('badge');
+  if(document.getElementById('hTaglineLanding')) document.getElementById('hTaglineLanding').textContent = t('tagline');
+  if(document.getElementById('landingStartText')) document.getElementById('landingStartText').textContent = t('btn_start');
+}
+
+function buildHints() {
+  const chips = document.getElementById('hintChips');
+  chips.innerHTML = '';
+  (HINTS[LANG] || HINTS['hinglish']).forEach(h => {
+    const btn = document.createElement('span');
+    btn.className = 'hint-chip';
+    btn.textContent = h;
+    btn.onclick = () => { document.getElementById('chatInput').value = h; sendChatMessage(); };
+    chips.appendChild(btn);
+  });
+}
+
+// ─────────────────────────────────────────────
+// TABS
+// ─────────────────────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(e => e.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('tab-'+tab+'-btn').classList.add('active');
+}
+
+// ─────────────────────────────────────────────
+// FORM
+// ─────────────────────────────────────────────
+function loadDemo() {
+  const d={age:42,gender:'MALE',state:'IN-UP',area_type:'RURAL',annual_income:72000,
+    occupation:'FARMER_OWNER',land_owned_hectares:1.5,land_leasing_status:'OWNER',
+    caste_category:'SC',family_size:5,aadhaar_linked:'true',bank_account:'true',marital_status:'MARRIED'};
+  Object.entries(d).forEach(([k,v])=>{ const el=document.getElementById(k); if(el) el.value=v; });
+}
+
+async function evaluateProfile() {
+  const panel=document.getElementById('resultsPanel');
+  const btn=document.getElementById('evaluateBtn');
+  const loadMsg = {en:"Evaluating 20 schemes...", hinglish:"20 schemes evaluate ho rahi hain...", hi:"20 योजनाएँ जाँची जा रही हैं..."};
+  panel.innerHTML=`<div class="section"><div class="spinner-wrap"><div class="spinner"></div><span style="color:var(--t2);font-size:.82rem;">${loadMsg[LANG]||loadMsg.hinglish}</span></div></div>`;
+  btn.disabled=true;
+  try {
+    const land=document.getElementById('land_owned_hectares').value;
+    const profile={
+      age:parseInt(document.getElementById('age').value),
+      gender:document.getElementById('gender').value,
+      state:document.getElementById('state').value,
+      area_type:document.getElementById('area_type').value,
+      annual_income:parseInt(document.getElementById('annual_income').value),
+      occupation:document.getElementById('occupation').value,
+      land_owned_hectares:land?parseFloat(land):null,
+      land_leasing_status:document.getElementById('land_leasing_status').value,
+      caste_category:document.getElementById('caste_category').value,
+      family_size:parseInt(document.getElementById('family_size').value),
+      aadhaar_linked:document.getElementById('aadhaar_linked').value==='true',
+      bank_account:document.getElementById('bank_account').value==='true',
+      marital_status:document.getElementById('marital_status').value,
+    };
+    const required=['age','gender','state','area_type','annual_income','occupation','land_leasing_status','caste_category','family_size','marital_status'];
+    const missing=required.filter(f=>!profile[f] && profile[f]!==0 && profile[f]!==false);
+    if(document.getElementById('aadhaar_linked').value==='') missing.push('aadhaar_linked');
+    if(document.getElementById('bank_account').value==='') missing.push('bank_account');
+    if(missing.length){
+      const errMsg={en:`Missing: ${missing.join(', ')}`,hinglish:`Yeh fields missing hain: ${missing.join(', ')}`,hi:`ये जानकारी अधूरी है: ${missing.join(', ')}`};
+      panel.innerHTML=`<div class="error-box" style="border-radius:12px;padding:1.5rem"><h4>⛔</h4><p>${errMsg[LANG]||errMsg.hinglish}</p></div>`;
+      btn.disabled=false; return;
+    }
+    const res=await fetch(`${API_BASE}/evaluate`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(profile)});
+    const data=await res.json();
+    panel.innerHTML=data.error ? renderError(data) : renderResults(data);
+  } catch(e) {
+    panel.innerHTML=`<div class="error-box" style="border-radius:12px;padding:1.5rem"><h4>⛔ Connection Error</h4><p>${e.message}</p></div>`;
+  }
+  btn.disabled=false;
+}
+
+function renderResults(data) {
+  const s=data.structured_output;
+  const {summary,input_validation,eligible_schemes,partially_eligible_schemes,uncertain_schemes,not_eligible_schemes,ambiguities_detected,document_checklist,application_sequence}=s;
+  let h='';
+
+  // Warnings
+  if(input_validation.contradictions.length||input_validation.warnings.length){
+    h+=`<div class="warning-box"><h4>⚠</h4>${input_validation.contradictions.map(c=>`<p>❗ ${c}</p>`).join('')}${input_validation.warnings.map(w=>`<p>⚡ ${w}</p>`).join('')}</div>`;
+  }
+
+  // Hinglish/Hindi/English summary banner
+  const summaryText = data.user_explanation_hinglish || data.summary_hinglish || '';
+  if(summaryText){
+    h+=`<div class="hinglish-panel"><div class="hinglish-label">🇮🇳 ${t('result_lang_label')}</div><div class="hinglish-text">${summaryText}</div></div>`;
+  }
+
+  // Summary grid
+  h+=`<div class="section"><div class="section-header"><div class="section-icon icon-blue">📊</div><span class="section-title" style="color:var(--acc)">Summary</span></div>
+    <div class="section-body"><div class="summary-grid">
+      <div class="summary-item"><div class="summary-count count-green">${summary.fully_eligible}</div><div class="summary-label">${t('result_eligible')}</div></div>
+      <div class="summary-item"><div class="summary-count count-yellow">${summary.partially_eligible}</div><div class="summary-label">${t('result_partial')}</div></div>
+      <div class="summary-item"><div class="summary-count count-purple">${summary.uncertain}</div><div class="summary-label">${t('result_uncertain')}</div></div>
+      <div class="summary-item"><div class="summary-count count-red">${summary.not_eligible}</div><div class="summary-label">${t('result_not_eligible')}</div></div>
+    </div></div></div>`;
+
+  const eH=data.eligible_hinglish||[];   const pH=data.partial_hinglish||[];
+  const uH=data.uncertain_hinglish||[];  const nH=data.not_eligible_hinglish||[];
+  if(eligible_schemes.length)            h+=renderSection('✅',t('result_eligible'),'green',eligible_schemes,'dot-green',eH);
+  if(partially_eligible_schemes.length)  h+=renderSection('⚡',t('result_partial'),'yellow',partially_eligible_schemes,'dot-yellow',pH);
+  if(uncertain_schemes.length)           h+=renderSection('🔍',t('result_uncertain'),'purple',uncertain_schemes,'dot-purple',uH);
+  if(not_eligible_schemes.length)        h+=renderSection('❌',t('result_not_eligible'),'red',not_eligible_schemes,'dot-red',nH);
+
+  // Next steps
+  const nsLines=data.next_steps_hinglish||[];
+  if(nsLines.length) h+=`<div class="section"><div class="section-header"><div class="section-icon icon-blue">🗺</div><span class="section-title" style="color:var(--acc)">${t('result_steps')}</span></div><div class="section-body"><ul class="hinglish-list">${nsLines.map(s=>`<li>${s}</li>`).join('')}</ul></div></div>`;
+
+  // Docs
+  const dLines=data.document_checklist_hinglish||[];
+  if(dLines.length) h+=`<div class="section"><div class="section-header"><div class="section-icon icon-blue">📄</div><span class="section-title" style="color:var(--acc)">${t('result_docs')}</span><span class="section-count">${dLines.length}</span></div><div class="section-body"><ul class="hinglish-list">${dLines.map(d=>`<li>${d}</li>`).join('')}</ul></div></div>`;
+
+  // Ambiguity
+  if(ambiguities_detected.length) h+=`<div class="section"><div class="section-header"><div class="section-icon icon-yellow">⚠</div><span class="section-title" style="color:var(--yellow)">${t('result_ambiguity')}</span><span class="section-count">${ambiguities_detected.length}</span></div><div class="section-body">${ambiguities_detected.map(a=>`<div class="ambiguity-item"><div class="ambiguity-type">${a.ambiguity_id} · ${a.type}</div><div class="ambiguity-desc">${a.description}</div><div class="ambiguity-penalty">Confidence penalty: -${(a.confidence_penalty*100).toFixed(0)}%</div></div>`).join('')}</div></div>`;
+
+  if(data.caveat_hinglish) h+=`<div style="text-align:center;font-size:.73rem;color:var(--t3);padding:.5rem">${data.caveat_hinglish}</div>`;
+  return h;
+}
+
+function renderSection(icon,title,cKey,schemes,dotC,hLines){
+  const cm={green:'var(--green)',yellow:'var(--yellow)',purple:'var(--purple)',red:'var(--red)'};
+  const im={green:'icon-green',yellow:'icon-yellow',purple:'icon-purple',red:'icon-red'};
+  return `<div class="section"><div class="section-header"><div class="section-icon ${im[cKey]}">${icon}</div><span class="section-title" style="color:${cm[cKey]}">${title}</span><span class="section-count">${schemes.length}</span></div>
+    <div class="section-body">
+      ${hLines.length?`<div style="margin-bottom:.7rem"><ul class="hinglish-list">${hLines.map(l=>`<li>${l}</li>`).join('')}</ul></div>`:''}
+      <div class="scheme-list">${schemes.map((s,i)=>renderScheme(s,dotC,cKey,i)).join('')}</div>
+    </div></div>`;
+}
+
+function renderScheme(s,dotC,cKey,idx){
+  const cm={green:'var(--green)',yellow:'var(--yellow)',purple:'var(--purple)',red:'var(--red)'};
+  const lvl=(s.confidence_level&&s.confidence_level.value)||s.confidence_level||'LOW';
+  const pct=Math.round(s.confidence_score*100);
+  const id=`si_${s.scheme_id}_${idx}`;
+  const traces=(s.rule_trace||[]).map(t=>{
+    const bc=t.status==='passed'?'sbadge-passed':t.status==='failed'?'sbadge-failed':t.status==='uncertain'?'sbadge-uncertain':'sbadge-skipped';
+    return `<tr><td>${t.rule}</td><td><span class="sbadge ${bc}">${t.status}</span></td><td style="color:var(--t2)">${t.reason||(t.value_found!=null?String(t.value_found):'—')}</td></tr>`;
+  }).join('');
+  const gap=s.gap_analysis?`<div class="gap-box"><div class="gap-label">Gap Analysis</div>${(s.gap_analysis.missing_conditions||[]).map(m=>`<div style="font-size:.77rem;color:var(--t2)">📌 ${m.requirement}</div><div style="font-size:.74rem;color:var(--green)">→ ${m.how_to_fulfill}</div>`).join('')}${(s.gap_analysis.conflicting_conditions||[]).map(c=>`<div style="font-size:.75rem;color:var(--red);margin-top:.25rem">⚡ ${c.description}</div>`).join('')}</div>`:'';
+  return `<div class="scheme-item" id="${id}" onclick="document.getElementById('${id}').classList.toggle('expanded')">
+    <div class="scheme-header">
+      <div class="scheme-dot ${dotC}"></div>
+      <div><div class="scheme-name">${s.scheme_name}</div><div class="scheme-id">${s.scheme_id}</div></div>
+      <div class="cbar-wrap">
+        <div class="cbar"><div class="cbar-fill" style="width:${pct}%;background:${cm[cKey]}"></div></div>
+        <span class="cscore" style="color:${cm[cKey]}">${pct}%</span>
+        <span class="cbadge badge-${lvl}">${lvl}</span>
+      </div>
+    </div>
+    <div class="scheme-details">
+      <div style="font-size:.72rem;color:var(--t2);margin-bottom:.55rem">${s.confidence_reason}</div>
+      <table class="trace-table"><thead><tr><th>Rule</th><th>Status</th><th>Detail</th></tr></thead><tbody>${traces}</tbody></table>
+      ${gap}
+      <div style="margin-top:.55rem"><a href="${s.application_url}" target="_blank" rel="noopener" style="font-size:.72rem;color:var(--acc);text-decoration:none">🔗 ${s.authority} →</a></div>
+    </div></div>`;
+}
+
+function renderError(d){
+  return `<div class="error-box" style="border-radius:12px;padding:1.5rem"><h4>⛔ ${d.error}</h4><p>${d.message}</p></div>`;
+}
+
+// ─────────────────────────────────────────────
+// CHAT
+// ─────────────────────────────────────────────
+function handleChatKey(e){ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChatMessage();} }
+
+function appendMsg(text, type) {
+  const win=document.getElementById('chatWindow');
+  const d=document.createElement('div');
+  d.className=`chat-msg ${type}`;
+  d.innerHTML=text;
+  win.appendChild(d);
+  win.scrollTop=win.scrollHeight;
+  return d;
+}
+
+function updateProgress(fields){
+  const keys=['age','gender','state','area_type','annual_income','occupation','land_leasing_status','caste_category','family_size','aadhaar_linked','bank_account','marital_status'];
+  const got=keys.filter(k=>fields[k]!==undefined&&fields[k]!==null);
+  const pct=Math.round(got.length/TOTAL_FIELDS*100);
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressPct').textContent=pct+'%';
+  document.getElementById('progressLabel').textContent=`${got.length}/${TOTAL_FIELDS}`;
+  const el=document.getElementById('collectedPills');
+  if(!got.length){
+    el.innerHTML=`<span style="font-size:.7rem;color:var(--t3)">${t('pills_empty')}</span>`;
+  } else {
+    el.innerHTML=got.map(k=>{
+      let v=fields[k];
+      if(typeof v==='boolean') v=v?'✅':'❌';
+      return `<span class="field-pill">${k}: ${v}</span>`;
+    }).join('');
+  }
+}
+
+async function sendChatMessage(){
+  const input=document.getElementById('chatInput');
+  const btn=document.getElementById('chatSendBtn');
+  const msg=input.value.trim();
+  if(!msg) return;
+  input.value=''; btn.disabled=true;
+  appendMsg(msg,'user');
+  const typing=appendMsg('...','bot');
+
+  try {
+    const res=await fetch(`${API_BASE}/chat`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({message:msg, session_fields:chatSession, language:LANG})
+    });
+    const data=await res.json();
+    chatSession=data.fields_collected||{};
+    updateProgress(chatSession);
+    typing.remove();
+
+    // Show what we understood from this message
+    const ack=data.acknowledgment_text||data.acknowledgment_hinglish||'';
+    const notUnderstood = ack.includes('samajh nahi')||ack.includes('Could not')||ack.includes('समझ नहीं');
+    if(ack && !notUnderstood){
+      appendMsg(`<strong>✅</strong> ${ack}`,'bot');
+    } else if(ack) {
+      appendMsg(`<em>${ack}</em>`,'bot');
+    }
+
+    // Warnings
+    if(data.warnings_text&&data.warnings_text.length)
+      appendMsg(data.warnings_text.join('<br>'),'system');
+
+    // ── EVALUATION COMPLETE → render full Form-Mode results panel ──
+    if(data.evaluation){
+      const readyMsg={
+        en:'✅ <strong>Profile complete — Evaluation done!</strong> Full results shown below ↓',
+        hinglish:'✅ <strong>Profile complete — Evaluation ho gayi!</strong> Poore results neeche hain ↓',
+        hi:'✅ <strong>प्रोफ़ाइल पूर्ण — मूल्यांकन हो गया!</strong> पूरे परिणाम नीचे देखें ↓'
+      };
+      appendMsg(readyMsg[LANG]||readyMsg.hinglish, 'bot');
+      showChatResults(data.evaluation);
+      chatSession={}; updateProgress({});
+
+    } else if(data.next_question_text){
+      // Still collecting — ask the next missing field
+      appendMsg(data.next_question_text,'bot');
+    } else {
+      appendMsg({
+        en:'Please provide more details.',
+        hinglish:'Kuch aur batayein...',
+        hi:'कुछ और बताएँ...'
+      }[LANG]||'...','bot');
+    }
+  } catch(e){
+    typing.remove();
+    appendMsg(`<span style="color:var(--red)">Error: ${e.message}</span>`,'system');
+  }
+  btn.disabled=false;
+  document.getElementById('chatInput').focus();
+}
+
+// ── Convert /chat evaluation payload → renderResults-compatible format ──
+function adaptChatEval(ev) {
+  return {
+    structured_output:           ev.structured,
+    user_explanation_hinglish:   ev.user_explanation_hinglish   || '',
+    eligible_hinglish:           ev.eligible_hinglish           || [],
+    partial_hinglish:            ev.partial_hinglish            || [],
+    uncertain_hinglish:          ev.uncertain_hinglish          || [],
+    not_eligible_hinglish:       ev.not_eligible_hinglish       || [],
+    next_steps_hinglish:         ev.next_steps_hinglish         || [],
+    document_checklist_hinglish: ev.document_checklist_hinglish || [],
+    caveat_hinglish:             ev.caveat_hinglish             || '',
+  };
+}
+
+// ── Show full Form-Mode results panel below the chat ──
+function showChatResults(ev) {
+  const panel   = document.getElementById('chatResultsPanel');
+  const adapted = adaptChatEval(ev);
+
+  const labels = {
+    title:    {en:'📊 Eligibility Results', hinglish:'📊 Eligibility Results', hi:'📊 पात्रता परिणाम'},
+    newQuery: {en:'🔄 New Query',           hinglish:'🔄 Nayi Query',          hi:'🔄 नई जाँच'},
+  };
+
+  const header = `
+    <div class="chat-results-header">
+      <span class="chat-results-title">${(labels.title[LANG]||labels.title.hinglish)}</span>
+      <button class="new-query-btn" onclick="resetChatResults()">${(labels.newQuery[LANG]||labels.newQuery.hinglish)}</button>
+    </div>`;
+
+  panel.innerHTML = header + renderResults(adapted);
+  panel.classList.add('visible');
+
+  // Smooth scroll so the results header comes into view
+  setTimeout(()=>panel.scrollIntoView({behavior:'smooth', block:'start'}), 120);
+}
+
+// ── Reset chat + results so user can start a fresh query ──
+function resetChatResults() {
+  const panel = document.getElementById('chatResultsPanel');
+  panel.innerHTML = '';
+  panel.classList.remove('visible');
+  chatSession = {};
+  updateProgress({});
+  const win = document.getElementById('chatWindow');
+  win.innerHTML = '';
+  appendMsg(t('chat_welcome'), 'bot');
+  document.getElementById('chatInput').focus();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+(function init(){
+  setLang('hinglish');
+  })();
+</script>
+</div>
+</body>
+</html>

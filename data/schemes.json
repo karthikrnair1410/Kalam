@@ -1,0 +1,828 @@
+[
+  {
+    "scheme_id": "PM_KISAN",
+    "scheme_name": "Pradhan Mantri Kisan Samman Nidhi",
+    "type": "income_support",
+    "authority": "Ministry of Agriculture and Farmers Welfare",
+    "application_url": "https://pmkisan.gov.in",
+    "rules": {
+      "citizenship": "must_be_indian",
+      "land_ownership_required": true,
+      "land_type": "cultivable_land",
+      "tenant_farmers_eligible": false,
+      "aadhaar_required": true,
+      "aadhaar_ekyc_required": true,
+      "bank_account_required": true,
+      "bank_aadhaar_linked": true
+    },
+    "exclusions": {
+      "income_tax_payers": true,
+      "institutional_landholders": true,
+      "government_employees_excluded": true,
+      "government_employee_exceptions": ["group_d", "mts"],
+      "excluded_professionals": ["doctor", "engineer", "lawyer", "chartered_accountant"]
+    },
+    "occupation_map": {
+      "eligible": ["FARMER_OWNER"],
+      "not_eligible": ["FARMER_TENANT", "AGRICULTURAL_LABOURER", "UNSKILLED_LABOURER",
+                       "SALARIED_PRIVATE", "STUDENT", "UNEMPLOYED", "OTHER"],
+      "ambiguous": ["SELF_EMPLOYED", "SALARIED_GOVT"]
+    },
+    "documents_required": ["aadhaar", "bank_passbook", "land_records"],
+    "state_variations": {
+      "farmer_registry": "state_dependent",
+      "land_record_digitization": "varies"
+    },
+    "ambiguities": [
+      {
+        "id": "AMB_PM_KISAN_01",
+        "description": "Actual cultivators without land ownership are excluded, but rules are vague about leasehold arrangements",
+        "type": "VAGUE_CRITERIA",
+        "affects_field": "land_leasing_status"
+      },
+      {
+        "id": "AMB_PM_KISAN_02",
+        "description": "Government employee exclusion only applies to Group A/B; Group D/MTS are exempt. Input schema cannot distinguish level.",
+        "type": "VAGUE_CRITERIA",
+        "affects_field": "occupation"
+      },
+      {
+        "id": "AMB_PM_KISAN_03",
+        "description": "State-level farmer registry implementation inconsistency may affect actual payment",
+        "type": "STATE_VARIATION",
+        "affects_field": "state"
+      }
+    ]
+  },
+  {
+    "scheme_id": "PMFBY",
+    "scheme_name": "Pradhan Mantri Fasal Bima Yojana",
+    "type": "crop_insurance",
+    "authority": "Ministry of Agriculture and Farmers Welfare",
+    "application_url": "https://pmfby.gov.in",
+    "rules": {
+      "citizenship": "must_be_indian",
+      "farmer_types_eligible": ["FARMER_OWNER", "FARMER_TENANT", "sharecropper"],
+      "notified_crops_only": true,
+      "land_records_required": true,
+      "proof_of_cultivation_required": true,
+      "bank_account_required": true
+    },
+    "occupation_map": {
+      "eligible": ["FARMER_OWNER", "FARMER_TENANT"],
+      "not_eligible": ["UNSKILLED_LABOURER", "SALARIED_PRIVATE", "SALARIED_GOVT", "STUDENT", "UNEMPLOYED"],
+      "ambiguous": ["AGRICULTURAL_LABOURER", "SELF_EMPLOYED", "OTHER"]
+    },
+    "exclusions": {
+      "non_notified_crops": true,
+      "no_insurable_interest": true
+    },
+    "state_variations": {
+      "scheme_implementation": "state_government_discretion",
+      "insurance_company_selection": "state_specific",
+      "premium_rates": "vary_by_state_and_crop"
+    },
+    "documents_required": ["land_records", "bank_account", "crop_sowing_certificate"],
+    "ambiguities": [
+      {
+        "id": "AMB_PMFBY_01",
+        "description": "Tenant farmer verification is operationally difficult — no standard proof exists",
+        "type": "VAGUE_CRITERIA",
+        "affects_field": "land_leasing_status"
+      },
+      {
+        "id": "AMB_PMFBY_02",
+        "description": "Loanee auto-enrollment removed in some states making coverage uncertain",
+        "type": "STATE_VARIATION",
+        "affects_field": "state"
+      },
+      {
+        "id": "AMB_PMFBY_03",
+        "description": "Weather vs yield-loss assessment method conflicts across states and insurers",
+        "type": "STATE_VARIATION",
+        "affects_field": "state"
+      }
+    ]
+  },
+  {
+    "scheme_id": "MGNREGA",
+    "scheme_name": "Mahatma Gandhi National Rural Employment Guarantee Act",
+    "type": "wage_employment",
+    "authority": "Ministry of Rural Development",
+    "application_url": "https://nrega.nic.in",
+    "rules": {
+      "citizenship": "must_be_indian",
+      "area_type": "RURAL",
+      "minimum_age": 18,
+      "household_based": true,
+      "willingness_unskilled_work": true,
+      "job_card_required": true,
+      "bank_account_required": true
+    },
+    "occupation_map": {
+      "eligible": ["AGRICULTURAL_LABOURER", "UNSKILLED_LABOURER", "FARMER_OWNER",
+                   "FARMER_TENANT", "UNEMPLOYED", "OTHER"],
+      "not_eligible": ["SALARIED_PRIVATE", "SALARIED_GOVT", "STUDENT"],
+      "ambiguous": ["SELF_EMPLOYED"]
+    },
+    "exclusions": {
+      "urban_households": true,
+      "age_below_18": true
+    },
+    "state_variations": {
+      "wage_rates": "vary_by_state",
+      "implementation_efficiency": "varies"
+    },
+    "documents_required": ["job_card", "aadhaar", "bank_passbook"],
+    "ambiguities": [
+      {
+        "id": "AMB_MGNREGA_01",
+        "description": "100 days entitlement is per household, not individual. Household usage history not available in input.",
+        "type": "HOUSEHOLD_DATA",
+        "affects_field": "family_size"
+      },
+      {
+        "id": "AMB_MGNREGA_02",
+        "description": "Demand-based but supply constraints exist — actual work may not be provided even if eligible",
+        "type": "OPERATIONAL_GAP",
+        "affects_field": null
+      },
+      {
+        "id": "AMB_MGNREGA_03",
+        "description": "Migration status affects local Gram Panchayat access for Job Card",
+        "type": "VAGUE_CRITERIA",
+        "affects_field": "state"
+      }
+    ]
+  },
+  {
+    "scheme_id": "PMAY",
+    "scheme_name": "Pradhan Mantri Awas Yojana",
+    "type": "housing",
+    "authority": "Ministry of Housing and Urban Affairs / Ministry of Rural Development",
+    "application_url": "https://pmaymis.gov.in",
+    "rules": {
+      "citizenship": "must_be_indian",
+      "must_not_own_pucca_house": true,
+      "bank_account_required": true,
+      "aadhaar_required": true
+    },
+    "urban_rules": {
+      "income_categories": {
+        "EWS": {"max_income": 300000},
+        "LIG": {"min_income": 300001, "max_income": 600000},
+        "MIG_I": {"min_income": 600001, "max_income": 1200000},
+        "MIG_II": {"min_income": 1200001, "max_income": 1800000}
+      },
+      "applies_when": "area_type == URBAN"
+    },
+    "rural_rules": {
+      "selection_basis": "SECC_2011_data",
+      "deprivation_parameters": true,
+      "applies_when": "area_type == RURAL"
+    },
+    "occupation_map": {
+      "eligible": ["AGRICULTURAL_LABOURER", "UNSKILLED_LABOURER", "FARMER_OWNER",
+                   "FARMER_TENANT", "SELF_EMPLOYED", "UNEMPLOYED", "OTHER"],
+      "not_eligible": [],
+      "ambiguous": ["SALARIED_PRIVATE", "SALARIED_GOVT", "STUDENT"]
+    },
+    "exclusions": {
+      "existing_pucca_house": true,
+      "duplicate_beneficiaries": true
+    },
+    "documents_required": ["aadhaar", "bank_passbook", "income_certificate", "self_declaration_no_house"],
+    "ambiguities": [
+      {
+        "id": "AMB_PMAY_01",
+        "description": "Definition of 'pucca house' can vary by local assessment — no universal standard",
+        "type": "VAGUE_CRITERIA",
+        "affects_field": null
+      },
+      {
+        "id": "AMB_PMAY_02",
+        "description": "Income verification in urban cases is inconsistent across implementing agencies",
+        "type": "VAGUE_CRITERIA",
+        "affects_field": "annual_income"
+      },
+      {
+        "id": "AMB_PMAY_03",
+        "description": "Rural eligibility depends on SECC 2011 DB — cannot be verified from user input alone",
+        "type": "PROXY_MISMATCH",
+        "affects_field": "area_type"
+      }
+    ]
+  },
+  {
+    "scheme_id": "PMJJBY",
+    "scheme_name": "Pradhan Mantri Jeevan Jyoti Bima Yojana",
+    "type": "life_insurance",
+    "authority": "Ministry of Finance",
+    "application_url": "https://jansuraksha.gov.in",
+    "rules": {
+      "citizenship": "must_be_indian",
+      "minimum_age": 18,
+      "maximum_age": 50,
+      "bank_account_required": true,
+      "auto_debit_consent": true
+    },
+    "occupation_map": {
+      "eligible": ["FARMER_OWNER", "FARMER_TENANT", "AGRICULTURAL_LABOURER",
+                   "UNSKILLED_LABOURER", "SELF_EMPLOYED", "SALARIED_PRIVATE", "OTHER"],
+      "not_eligible": [],
+      "ambiguous": ["SALARIED_GOVT", "STUDENT", "UNEMPLOYED"]
+    },
+    "exclusions": {
+      "multiple_enrollments_not_allowed": true
+    },
+    "documents_required": ["bank_passbook", "aadhaar"],
+    "ambiguities": [
+      {
+        "id": "AMB_PMJJBY_01",
+        "description": "Account dormancy can silently cancel policy without user notification",
+        "type": "OPERATIONAL_GAP",
+        "affects_field": "bank_account"
+      },
+      {
+        "id": "AMB_PMJJBY_02",
+        "description": "Multiple account detection across banks is not foolproof",
+        "type": "OPERATIONAL_GAP",
+        "affects_field": "bank_account"
+      }
+    ]
+  },
+  {
+    "scheme_id": "PMSBY",
+    "scheme_name": "Pradhan Mantri Suraksha Bima Yojana",
+    "type": "accident_insurance",
+    "authority": "Ministry of Finance",
+    "application_url": "https://jansuraksha.gov.in",
+    "rules": {
+      "citizenship": "must_be_indian",
+      "minimum_age": 18,
+      "maximum_age": 70,
+      "bank_account_required": true,
+      "auto_debit_consent": true
+    },
+    "occupation_map": {
+      "eligible": ["FARMER_OWNER", "FARMER_TENANT", "AGRICULTURAL_LABOURER",
+                   "UNSKILLED_LABOURER", "SELF_EMPLOYED", "SALARIED_PRIVATE",
+                   "UNEMPLOYED", "OTHER"],
+      "not_eligible": [],
+      "ambiguous": ["SALARIED_GOVT", "STUDENT"]
+    },
+    "exclusions": {
+      "multiple_enrollments_not_allowed": true
+    },
+    "documents_required": ["bank_passbook", "aadhaar"],
+    "ambiguities": [
+      {
+        "id": "AMB_PMSBY_01",
+        "description": "Definition of 'accidental death' has edge cases — suicide, natural death during accident context",
+        "type": "VAGUE_CRITERIA",
+        "affects_field": null
+      },
+      {
+        "id": "AMB_PMSBY_02",
+        "description": "Policy lapses silently if auto-debit fails",
+        "type": "OPERATIONAL_GAP",
+        "affects_field": "bank_account"
+      }
+    ]
+  },
+  {
+    "scheme_id": "APY",
+    "scheme_name": "Atal Pension Yojana",
+    "type": "pension",
+    "authority": "Pension Fund Regulatory and Development Authority",
+    "application_url": "https://npscra.nsdl.co.in",
+    "rules": {
+      "citizenship": "must_be_indian",
+      "minimum_age": 18,
+      "maximum_age": 40,
+      "bank_account_required": true,
+      "auto_debit_required": true,
+      "target_unorganised_sector": true
+    },
+    "occupation_map": {
+      "eligible": ["FARMER_OWNER", "FARMER_TENANT", "AGRICULTURAL_LABOURER",
+                   "UNSKILLED_LABOURER", "SELF_EMPLOYED", "UNEMPLOYED", "OTHER"],
+      "not_eligible": [],
+      "ambiguous": ["SALARIED_PRIVATE", "SALARIED_GOVT", "STUDENT"]
+    },
+    "documents_required": ["bank_passbook", "aadhaar"],
+    "ambiguities": [
+      {
+        "id": "AMB_APY_01",
+        "description": "Unorganised sector status is not strictly verified during enrollment",
+        "type": "VAGUE_CRITERIA",
+        "affects_field": "occupation"
+      },
+      {
+        "id": "AMB_APY_02",
+        "description": "Income tax payers can enroll but lose government co-contribution benefit",
+        "type": "VAGUE_CRITERIA",
+        "affects_field": "annual_income"
+      }
+    ]
+  },
+  {
+    "scheme_id": "PMMVY",
+    "scheme_name": "Pradhan Mantri Matru Vandana Yojana",
+    "type": "maternity_benefit",
+    "authority": "Ministry of Women and Child Development",
+    "application_url": "https://wcd.nic.in",
+    "rules": {
+      "citizenship": "must_be_indian",
+      "gender": "FEMALE",
+      "minimum_age": 19,
+      "pregnant_or_lactating": true,
+      "first_child_only": true,
+      "aadhaar_required": true,
+      "bank_account_required": true
+    },
+    "occupation_map": {
+      "eligible": ["FARMER_OWNER", "FARMER_TENANT", "AGRICULTURAL_LABOURER",
+                   "UNSKILLED_LABOURER", "SELF_EMPLOYED", "UNEMPLOYED", "OTHER"],
+      "not_eligible": ["SALARIED_GOVT"],
+      "ambiguous": ["SALARIED_PRIVATE", "STUDENT"]
+    },
+    "exclusions": {
+      "government_employees": true,
+      "second_and_subsequent_children": true
+    },
+    "documents_required": ["aadhaar", "bank_passbook", "mother_child_protection_card"],
+    "ambiguities": [
+      {
+        "id": "AMB_PMMVY_01",
+        "description": "Some states provide top-up schemes that overlap and may cause double-counting",
+        "type": "STATE_VARIATION",
+        "affects_field": "state"
+      },
+      {
+        "id": "AMB_PMMVY_02",
+        "description": "Second child exception exists in some states breaking the first_child_only rule",
+        "type": "STATE_VARIATION",
+        "affects_field": "state"
+      }
+    ]
+  },
+  {
+    "scheme_id": "PMBJP",
+    "scheme_name": "Pradhan Mantri Bharatiya Janaushadhi Pariyojana",
+    "type": "public_health_access",
+    "authority": "Ministry of Chemicals and Fertilizers",
+    "application_url": "https://janaushadhi.gov.in",
+    "rules": {
+      "universal_access": true,
+      "citizenship": "not_strictly_enforced",
+      "income_criteria": "none",
+      "valid_prescription_required_for_rx_drugs": true
+    },
+    "occupation_map": {
+      "eligible": ["FARMER_OWNER", "FARMER_TENANT", "AGRICULTURAL_LABOURER",
+                   "UNSKILLED_LABOURER", "SELF_EMPLOYED", "SALARIED_PRIVATE",
+                   "SALARIED_GOVT", "UNEMPLOYED", "STUDENT", "OTHER"],
+      "not_eligible": [],
+      "ambiguous": []
+    },
+    "documents_required": ["valid_prescription"],
+    "ambiguities": [
+      {
+        "id": "AMB_PMBJP_01",
+        "description": "Store availability varies by location — access not guaranteed everywhere",
+        "type": "STATE_VARIATION",
+        "affects_field": "state"
+      }
+    ]
+  },
+  {
+    "scheme_id": "PMMY",
+    "scheme_name": "Pradhan Mantri Mudra Yojana",
+    "type": "credit_support",
+    "authority": "Ministry of Finance / MUDRA",
+    "application_url": "https://mudra.org.in",
+    "rules": {
+      "citizenship": "must_be_indian",
+      "non_corporate_non_farm_business": true,
+      "not_a_loan_defaulter": true,
+      "eligible_sectors": ["manufacturing", "trading", "services"]
+    },
+    "loan_categories": {
+      "shishu": {"max": 50000},
+      "kishor": {"min": 50001, "max": 500000},
+      "tarun": {"min": 500001, "max": 1000000}
+    },
+    "occupation_map": {
+      "eligible": ["SELF_EMPLOYED", "FARMER_OWNER", "OTHER"],
+      "not_eligible": ["SALARIED_GOVT", "STUDENT"],
+      "ambiguous": ["FARMER_TENANT", "AGRICULTURAL_LABOURER", "UNSKILLED_LABOURER",
+                    "SALARIED_PRIVATE", "UNEMPLOYED"]
+    },
+    "exclusions": {
+      "large_corporates": true,
+      "primary_agriculture": true
+    },
+    "documents_required": ["aadhaar", "bank_passbook", "business_proof"],
+    "ambiguities": [
+      {
+        "id": "AMB_PMMY_01",
+        "description": "Loan approval is bank's discretion — eligibility does not guarantee sanction",
+        "type": "OPERATIONAL_GAP",
+        "affects_field": null
+      },
+      {
+        "id": "AMB_PMMY_02",
+        "description": "Bank-level bias and credit risk assessment supersedes scheme eligibility criteria",
+        "type": "OPERATIONAL_GAP",
+        "affects_field": null
+      }
+    ]
+  },
+  {
+    "scheme_id": "SSY",
+    "scheme_name": "Sukanya Samriddhi Yojana",
+    "type": "savings_scheme",
+    "authority": "Ministry of Finance",
+    "application_url": "https://www.nsiindia.gov.in",
+    "rules": {
+      "citizenship": "must_be_indian",
+      "beneficiary": "girl_child",
+      "account_opening_before_age": 10,
+      "account_holder": "parent_or_guardian",
+      "max_accounts_per_family": 2,
+      "exception_twins_triplets": true,
+      "nri_not_allowed": true,
+      "girl_child_required": true
+    },
+    "occupation_map": {
+      "eligible": ["FARMER_OWNER", "FARMER_TENANT", "AGRICULTURAL_LABOURER",
+                   "UNSKILLED_LABOURER", "SELF_EMPLOYED", "SALARIED_PRIVATE",
+                   "SALARIED_GOVT", "UNEMPLOYED", "OTHER"],
+      "not_eligible": [],
+      "ambiguous": ["STUDENT"]
+    },
+    "documents_required": ["girl_child_birth_certificate", "aadhaar_of_guardian", "bank_passbook"],
+    "ambiguities": [
+      {
+        "id": "AMB_SSY_01",
+        "description": "Guardian rules in edge cases (orphan, estranged parents) are unclear",
+        "type": "VAGUE_CRITERIA",
+        "affects_field": "marital_status"
+      },
+      {
+        "id": "AMB_SSY_02",
+        "description": "Residency status changes (NRI becoming resident) create account validity issues",
+        "type": "VAGUE_CRITERIA",
+        "affects_field": "state"
+      }
+    ]
+  },
+  {
+    "scheme_id": "PMKVY",
+    "scheme_name": "Pradhan Mantri Kaushal Vikas Yojana",
+    "type": "skill_development",
+    "authority": "Ministry of Skill Development and Entrepreneurship",
+    "application_url": "https://pmkvyofficial.org",
+    "rules": {
+      "citizenship": "must_be_indian",
+      "minimum_age": 15,
+      "aadhaar_required": true
+    },
+    "occupation_map": {
+      "eligible": ["UNEMPLOYED", "AGRICULTURAL_LABOURER", "UNSKILLED_LABOURER",
+                   "FARMER_TENANT", "OTHER"],
+      "not_eligible": ["SALARIED_GOVT"],
+      "ambiguous": ["FARMER_OWNER", "SELF_EMPLOYED", "SALARIED_PRIVATE", "STUDENT"]
+    },
+    "documents_required": ["aadhaar"],
+    "ambiguities": [
+      {
+        "id": "AMB_PMKVY_01",
+        "description": "Placement outcomes are not guaranteed — benefit is uncertain",
+        "type": "OPERATIONAL_GAP",
+        "affects_field": null
+      },
+      {
+        "id": "AMB_PMKVY_02",
+        "description": "Course availability varies dynamically by training center and region",
+        "type": "STATE_VARIATION",
+        "affects_field": "state"
+      }
+    ]
+  },
+  {
+    "scheme_id": "PMUY",
+    "scheme_name": "Pradhan Mantri Ujjwala Yojana",
+    "type": "clean_energy_access",
+    "authority": "Ministry of Petroleum and Natural Gas",
+    "application_url": "https://pmuy.gov.in",
+    "rules": {
+      "citizenship": "must_be_indian",
+      "gender": "FEMALE",
+      "belongs_to_poor_household": true,
+      "must_not_have_existing_lpg": true,
+      "aadhaar_required": true,
+      "bank_account_required": true,
+      "ration_card_required": true
+    },
+    "household_categories": [
+      "SECC_2011_listed",
+      "SC_ST_household",
+      "Antyodaya_Anna_Yojana",
+      "forest_dweller",
+      "most_backward_classes"
+    ],
+    "occupation_map": {
+      "eligible": ["AGRICULTURAL_LABOURER", "UNSKILLED_LABOURER", "FARMER_OWNER",
+                   "FARMER_TENANT", "UNEMPLOYED", "OTHER"],
+      "not_eligible": ["SALARIED_GOVT"],
+      "ambiguous": ["SELF_EMPLOYED", "SALARIED_PRIVATE", "STUDENT"]
+    },
+    "exclusions": {
+      "existing_lpg_connection": true
+    },
+    "documents_required": ["aadhaar", "bank_passbook", "ration_card", "bpl_certificate"],
+    "ambiguities": [
+      {
+        "id": "AMB_PMUY_01",
+        "description": "Refill affordability limits actual usage — connection given but gas unaffordable",
+        "type": "OPERATIONAL_GAP",
+        "affects_field": "annual_income"
+      },
+      {
+        "id": "AMB_PMUY_02",
+        "description": "Household definition can vary — joint family vs nuclear family",
+        "type": "VAGUE_CRITERIA",
+        "affects_field": "family_size"
+      },
+      {
+        "id": "AMB_PMUY_03",
+        "description": "SECC 2011 basis cannot be verified from input schema alone",
+        "type": "PROXY_MISMATCH",
+        "affects_field": "caste_category"
+      }
+    ]
+  },
+  {
+    "scheme_id": "JJM",
+    "scheme_name": "Jal Jeevan Mission",
+    "type": "infrastructure_service",
+    "authority": "Ministry of Jal Shakti",
+    "application_url": "https://jaljeevanmission.gov.in",
+    "rules": {
+      "area_type": "RURAL",
+      "household_based": true
+    },
+    "occupation_map": {
+      "eligible": ["FARMER_OWNER", "FARMER_TENANT", "AGRICULTURAL_LABOURER",
+                   "UNSKILLED_LABOURER", "SELF_EMPLOYED", "UNEMPLOYED", "OTHER"],
+      "not_eligible": [],
+      "ambiguous": ["SALARIED_PRIVATE", "SALARIED_GOVT", "STUDENT"]
+    },
+    "documents_required": ["aadhaar", "ration_card"],
+    "ambiguities": [
+      {
+        "id": "AMB_JJM_01",
+        "description": "Coverage vs functionality gap — connection may be given but not functional",
+        "type": "OPERATIONAL_GAP",
+        "affects_field": null
+      },
+      {
+        "id": "AMB_JJM_02",
+        "description": "Water supply may be intermittent rather than regular 55 lpcd",
+        "type": "OPERATIONAL_GAP",
+        "affects_field": null
+      }
+    ]
+  },
+  {
+    "scheme_id": "BBBP",
+    "scheme_name": "Beti Bachao Beti Padhao",
+    "type": "social_awareness_and_welfare",
+    "authority": "Ministry of Women and Child Development",
+    "application_url": "https://wcd.nic.in/bbbp-schemes",
+    "rules": {
+      "target_group": ["girl_child", "families", "community"],
+      "direct_cash_transfer": false,
+      "awareness_campaign_only": true
+    },
+    "occupation_map": {
+      "eligible": ["FARMER_OWNER", "FARMER_TENANT", "AGRICULTURAL_LABOURER",
+                   "UNSKILLED_LABOURER", "SELF_EMPLOYED", "SALARIED_PRIVATE",
+                   "SALARIED_GOVT", "UNEMPLOYED", "STUDENT", "OTHER"],
+      "not_eligible": [],
+      "ambiguous": []
+    },
+    "documents_required": [],
+    "ambiguities": [
+      {
+        "id": "AMB_BBBP_01",
+        "description": "Not a direct benefit scheme — no DBT or cash transfer involved",
+        "type": "VAGUE_CRITERIA",
+        "affects_field": null
+      },
+      {
+        "id": "AMB_BBBP_02",
+        "description": "Overlap with SSY and other girl child schemes creates confusion about what BBBP delivers",
+        "type": "VAGUE_CRITERIA",
+        "affects_field": null
+      }
+    ]
+  },
+  {
+    "scheme_id": "PMKSY",
+    "scheme_name": "Pradhan Mantri Krishi Sinchai Yojana",
+    "type": "agriculture_infrastructure",
+    "authority": "Ministry of Jal Shakti / Ministry of Agriculture",
+    "application_url": "https://pmksy.gov.in",
+    "rules": {
+      "citizenship": "must_be_indian",
+      "cultivable_land_required": true,
+      "project_participation_required": true
+    },
+    "occupation_map": {
+      "eligible": ["FARMER_OWNER", "FARMER_TENANT"],
+      "not_eligible": ["UNSKILLED_LABOURER", "SALARIED_PRIVATE", "SALARIED_GOVT",
+                       "STUDENT", "UNEMPLOYED"],
+      "ambiguous": ["AGRICULTURAL_LABOURER", "SELF_EMPLOYED", "OTHER"]
+    },
+    "documents_required": ["land_records", "aadhaar"],
+    "ambiguities": [
+      {
+        "id": "AMB_PMKSY_01",
+        "description": "Individual vs group benefit confusion — many sub-schemes work at project/cluster level",
+        "type": "VAGUE_CRITERIA",
+        "affects_field": null
+      },
+      {
+        "id": "AMB_PMKSY_02",
+        "description": "Access depends on local project availability — cannot guarantee based on input alone",
+        "type": "OPERATIONAL_GAP",
+        "affects_field": "state"
+      }
+    ]
+  },
+  {
+    "scheme_id": "PMJAY",
+    "scheme_name": "Ayushman Bharat PM Jan Arogya Yojana",
+    "type": "health_insurance",
+    "authority": "National Health Authority",
+    "application_url": "https://pmjay.gov.in",
+    "rules": {
+      "citizenship": "must_be_indian",
+      "selection_basis": "SECC_2011_database",
+      "family_size_limit": "none",
+      "age_limit": "none",
+      "income_limit": "not_directly_used"
+    },
+    "rural_deprivation_criteria": [
+      "D1_kutcha_house",
+      "D2_no_adult_16_59",
+      "D3_female_headed_no_adult_male",
+      "D4_disabled_member",
+      "D5_SC_ST",
+      "D7_landless_manual_labor"
+    ],
+    "urban_occupation_criteria": [
+      "ragpicker", "domestic_worker", "street_vendor",
+      "construction_worker", "sanitation_worker"
+    ],
+    "occupation_map": {
+      "eligible": [],
+      "not_eligible": [],
+      "ambiguous": ["FARMER_OWNER", "FARMER_TENANT", "AGRICULTURAL_LABOURER",
+                    "UNSKILLED_LABOURER", "SELF_EMPLOYED", "SALARIED_PRIVATE",
+                    "SALARIED_GOVT", "UNEMPLOYED", "STUDENT", "OTHER"]
+    },
+    "documents_required": ["ration_card_or_family_id", "identity_proof"],
+    "ambiguities": [
+      {
+        "id": "AMB_PMJAY_01",
+        "description": "Eligibility is entirely SECC 2011 database dependent — cannot be determined from user input alone",
+        "type": "PROXY_MISMATCH",
+        "affects_field": null
+      },
+      {
+        "id": "AMB_PMJAY_02",
+        "description": "Income is not directly used but indirectly implied through SECC deprivation criteria",
+        "type": "VAGUE_CRITERIA",
+        "affects_field": "annual_income"
+      },
+      {
+        "id": "AMB_PMJAY_03",
+        "description": "State-specific expansions exist — some states have added beneficiaries beyond SECC",
+        "type": "STATE_VARIATION",
+        "affects_field": "state"
+      }
+    ]
+  },
+  {
+    "scheme_id": "PMJDY",
+    "scheme_name": "Pradhan Mantri Jan Dhan Yojana",
+    "type": "financial_inclusion",
+    "authority": "Ministry of Finance",
+    "application_url": "https://pmjdy.gov.in",
+    "rules": {
+      "citizenship": "must_be_indian",
+      "minimum_age": 10,
+      "income_criteria": "none",
+      "occupation_criteria": "none"
+    },
+    "occupation_map": {
+      "eligible": ["FARMER_OWNER", "FARMER_TENANT", "AGRICULTURAL_LABOURER",
+                   "UNSKILLED_LABOURER", "SELF_EMPLOYED", "SALARIED_PRIVATE",
+                   "SALARIED_GOVT", "UNEMPLOYED", "STUDENT", "OTHER"],
+      "not_eligible": [],
+      "ambiguous": []
+    },
+    "documents_required": ["aadhaar_or_other_kyc"],
+    "ambiguities": [
+      {
+        "id": "AMB_PMJDY_01",
+        "description": "Multiple accounts allowed but benefit-linking across accounts is unclear",
+        "type": "OPERATIONAL_GAP",
+        "affects_field": "bank_account"
+      },
+      {
+        "id": "AMB_PMJDY_02",
+        "description": "KYC rules vary by bank — small account limitations may apply",
+        "type": "STATE_VARIATION",
+        "affects_field": null
+      }
+    ]
+  },
+  {
+    "scheme_id": "ESHRAM",
+    "scheme_name": "e-Shram Unorganised Workers Portal",
+    "type": "social_security",
+    "authority": "Ministry of Labour and Employment",
+    "application_url": "https://eshram.gov.in",
+    "rules": {
+      "citizenship": "must_be_indian",
+      "minimum_age": 16,
+      "maximum_age": 59,
+      "unorganised_worker": true,
+      "not_member_EPFO_ESIC": true
+    },
+    "occupation_map": {
+      "eligible": ["AGRICULTURAL_LABOURER", "UNSKILLED_LABOURER", "FARMER_TENANT",
+                   "SELF_EMPLOYED", "UNEMPLOYED", "OTHER"],
+      "not_eligible": ["SALARIED_GOVT"],
+      "ambiguous": ["FARMER_OWNER", "SALARIED_PRIVATE", "STUDENT"]
+    },
+    "documents_required": ["aadhaar", "bank_passbook"],
+    "ambiguities": [
+      {
+        "id": "AMB_ESHRAM_01",
+        "description": "Definition of 'unorganised worker' is broad — includes gig workers, domestic help, street vendors etc. Edge cases may be disputed.",
+        "type": "VAGUE_CRITERIA",
+        "affects_field": "occupation"
+      },
+      {
+        "id": "AMB_ESHRAM_02",
+        "description": "EPFO/ESIC membership status cannot be verified from user input alone",
+        "type": "PROXY_MISMATCH",
+        "affects_field": "occupation"
+      }
+    ]
+  },
+  {
+    "scheme_id": "PMSYM",
+    "scheme_name": "Pradhan Mantri Shram Yogi Maan-dhan Yojana",
+    "type": "pension",
+    "authority": "Ministry of Labour and Employment",
+    "application_url": "https://maandhan.in",
+    "rules": {
+      "citizenship": "must_be_indian",
+      "minimum_age": 18,
+      "maximum_age": 40,
+      "income_limit": 15000,
+      "income_limit_type": "monthly",
+      "unorganised_worker": true,
+      "not_member_EPFO_ESIC_NPS": true,
+      "bank_account_required": true
+    },
+    "occupation_map": {
+      "eligible": ["AGRICULTURAL_LABOURER", "UNSKILLED_LABOURER", "FARMER_TENANT",
+                   "SELF_EMPLOYED", "OTHER"],
+      "not_eligible": ["SALARIED_GOVT", "SALARIED_PRIVATE"],
+      "ambiguous": ["FARMER_OWNER", "UNEMPLOYED", "STUDENT"]
+    },
+    "documents_required": ["aadhaar", "bank_passbook"],
+    "ambiguities": [
+      {
+        "id": "AMB_PMSYM_01",
+        "description": "Monthly income limit of Rs.15,000 is self-declared and unverifiable from annual income alone",
+        "type": "VAGUE_CRITERIA",
+        "affects_field": "annual_income"
+      },
+      {
+        "id": "AMB_PMSYM_02",
+        "description": "EPFO/ESIC/NPS membership exclusion cannot be verified from user input",
+        "type": "PROXY_MISMATCH",
+        "affects_field": "occupation"
+      }
+    ]
+  }
+]
