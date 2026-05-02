@@ -33,7 +33,7 @@ KALAM is a deterministic, rule-based welfare eligibility engine that evaluates I
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/karthikrnair1410/kalam.git
+git clone https://github.com/karthikrnair1410/Kalam.git
 cd kalam
 
 # 2. Install dependencies
